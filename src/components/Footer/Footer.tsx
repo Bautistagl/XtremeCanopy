@@ -3,9 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import './Footer.css'; 
-import fb from '../../images/fb.png';
-import ig from '../../images/ig.png';
-import logo from '../../images/whiteLogo.jpeg';
+
 
 const Footer: React.FC = () => {
   return (
@@ -13,7 +11,7 @@ const Footer: React.FC = () => {
       <div className="footer-container">
         <div className="footer-column company-info">
           <Image
-            src={logo} // Ajusta la ruta a tu logo
+            src="/images/whiteLogo.jpeg"
             alt="Xtreme Logo"
             width={150}
             height={60}
@@ -28,13 +26,23 @@ const Footer: React.FC = () => {
               href="https://facebook.com/XtremeCanopy"
               aria-label="Facebook"
             >
-              <Image src={fb} alt="Instagram" width={20} height={20} />
+              <Image
+                src="/images/fb.png"
+                alt="Instagram"
+                width={20}
+                height={20}
+              />
             </Link>
             <Link
               href="https://instagram.com/xtremecanopy"
               aria-label="Instagram"
             >
-              <Image src={ig} alt="Instagram" width={20} height={20} />
+              <Image
+                src="/images/ig.png"
+                alt="Instagram"
+                width={20}
+                height={20}
+              />
             </Link>
           </div>
         </div>

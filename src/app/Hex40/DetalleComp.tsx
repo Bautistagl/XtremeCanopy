@@ -3,52 +3,46 @@
 import type React from "react"
 import { useState } from "react"
 import "../Hex40/Detalle.css"
-import imagen from "../../images/gaze.jpg"
-import imagen2 from "../../images/3x3.png"
-import imagen3 from "../../images/3x4.5.png"
-import imagen4 from "../../images/3x6.png"
-import imagen5 from "../../images/hexagonal.png"
-import Image from "next/image"
-import logo from "../../images/blackLogo.jpeg"
-import Link from "next/link"
-import { useCart } from "@/components/Cart/CartContext"
-import { formatProductForCart } from "@/components/Cart/addToCartHelper"
-import Footer from "@/components/Footer/Footer"
+import Image from "next/image";
+import Link from "next/link";
+import { useCart } from "@/components/Cart/CartContext";
+import { formatProductForCart } from "@/components/Cart/addToCartHelper";
+import Footer from "@/components/Footer/Footer";
 interface SizeOption {
-  size: string
-  height: number
-  width: number
-  depth: number
-  weight: number
+  size: string;
+  height: number;
+  width: number;
+  depth: number;
+  weight: number;
 }
 
 interface ColorOption {
-  name: string
-  value: string
+  name: string;
+  value: string;
 }
 
 const ProductDetail: React.FC = () => {
-  const [selectedSize, setSelectedSize] = useState<string>("3x3")
-  const [selectedColor, setSelectedColor] = useState<string>("negro")
-  const [mainImage, setMainImage] = useState<any>(imagen)
-  const [quantity, setQuantity] = useState<number>(1)
+  const [selectedSize, setSelectedSize] = useState<string>("3x3");
+  const [selectedColor, setSelectedColor] = useState<string>("negro");
+  const [mainImage, setMainImage] = useState<any>("/images/gaze.jpg");
+  const [quantity, setQuantity] = useState<number>(1);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { addItem } = useCart(); // Usar el hook del contexto del carrito
 
   const thumbnailImages = [
-    { src: imagen, alt: "Gazebo vista frontal" },
-    { src: imagen2, alt: "Gazebo vista 3x3" },
-    { src: imagen3, alt: "Gazebo vista 3x4.5" },
-    { src: imagen4, alt: "Gazebo vista 3x6" },
-    { src: imagen5, alt: "Gazebo vista 3x6" }
-  ]
+    { src: "/images/gaze.jpg", alt: "Gazebo vista frontal" },
+    { src: "/images/3x3.png", alt: "Gazebo vista 3x3" },
+    { src: "/images/3x4.5.png", alt: "Gazebo vista 3x4.5" },
+    { src: "/images/3x6.png", alt: "Gazebo vista 3x6" },
+    { src: "/images/hexagonal.png", alt: "Gazebo vista 3x6" },
+  ];
 
   const sizes: SizeOption[] = [
     { size: "3x3", height: 160, width: 24, depth: 24, weight: 23 },
     { size: "3x4.5", height: 160, width: 33, depth: 24, weight: 29 },
     { size: "3x6", height: 160, width: 43, depth: 25, weight: 41 },
     { size: "Hexagonal", height: 162, width: 55, depth: 45, weight: 79 },
-  ]
+  ];
   const colors: ColorOption[] = [
     { name: "Negro", value: "negro" },
     { name: "Blanco", value: "blanco" },
@@ -56,24 +50,25 @@ const ProductDetail: React.FC = () => {
     { name: "Azul", value: "azul" },
     { name: "Naranja", value: "naranja" },
     { name: "Verde", value: "verde" },
-  ]
+  ];
 
   const handleSizeChange = (size: string) => {
-    setSelectedSize(size)
-  }
+    setSelectedSize(size);
+  };
 
   const handleColorChange = (color: string) => {
-    setSelectedColor(color)
-  }
+    setSelectedColor(color);
+  };
 
   const handleThumbnailClick = (image: any) => {
-    setMainImage(image)
-  }
-  
+    setMainImage(image);
+  };
+
   const handleAddToCart = () => {
     // Obtener el nombre del color seleccionado
-    const selectedColorName = colors.find(c => c.value === selectedColor)?.name || selectedColor;
-    
+    const selectedColorName =
+      colors.find((c) => c.value === selectedColor)?.name || selectedColor;
+
     // Formatear el producto para el carrito
     const productToAdd = formatProductForCart(
       "Gazebo Aluminio HEX 40",
@@ -83,28 +78,32 @@ const ProductDetail: React.FC = () => {
       selectedColorName,
       mainImage.src // Pasar la URL de la imagen actual
     );
-    
+
     // Añadir el producto al carrito
     addItem(productToAdd);
-    
+
     // Mostrar confirmación
     alert(`Producto agregado al carrito:
       - ${productToAdd.name}
       - Tamaño: ${productToAdd.size}
       - Color: ${productToAdd.color}
       - Cantidad: ${productToAdd.quantity}`);
-  }
-  
+  };
+
   // Función para obtener precio según tamaño
   const getPriceBySize = (size: string): number => {
-    switch(size) {
-      case "3x3": return 25000;
-      case "3x4.5": return 32000;
-      case "3x6": return 39000;
-      default: return 25000;
+    switch (size) {
+      case "3x3":
+        return 25000;
+      case "3x4.5":
+        return 32000;
+      case "3x6":
+        return 39000;
+      default:
+        return 25000;
     }
-  }
-  
+  };
+
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
   };
@@ -113,14 +112,19 @@ const ProductDetail: React.FC = () => {
     setIsPopupOpen(false);
   };
 
-  const selectedSizeData = sizes.find((s) => s.size === selectedSize)
+  const selectedSizeData = sizes.find((s) => s.size === selectedSize);
 
   return (
     <div className="product-container">
       <header className="header">
         <Link href="/">
           <div className="logo">
-            <Image height={100} width={150} src={logo} alt="Xtreme Logo" />
+            <Image
+              height={100}
+              width={150}
+              src="/images/blackLogo.jpeg"
+              alt="Xtreme Logo"
+            />
           </div>
         </Link>
         <nav className="navigation">
@@ -379,6 +383,6 @@ const ProductDetail: React.FC = () => {
       <Footer />
     </div>
   );
-}
+};
 
 export default ProductDetail

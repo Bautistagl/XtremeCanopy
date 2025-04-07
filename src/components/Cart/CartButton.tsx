@@ -2,11 +2,9 @@
 
 import React, { useState } from 'react';
 import { useCart } from './CartContext';
-import Image from 'next/image';
-import Link from 'next/link';
-import './cart.css'
+import Image from "next/image";
+import "./cart.css";
 // Estilos CSS para el componente
-
 
 // Crear un ícono de carrito simple usando SVG
 const CartIcon = () => (
@@ -29,7 +27,14 @@ const CartIcon = () => (
 
 const CartButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { items, totalItems, totalPrice, updateQuantity, removeItem, clearCart } = useCart();
+  const {
+    items,
+    totalItems,
+    totalPrice,
+    updateQuantity,
+    removeItem,
+    clearCart,
+  } = useCart();
 
   const toggleCart = () => {
     setIsOpen(!isOpen);
@@ -41,7 +46,7 @@ const CartButton: React.FC = () => {
 
   const handleCheckout = () => {
     // Aquí podrías redirigir a una página de checkout
-    alert('Redirigiendo al checkout...');
+    alert("Redirigiendo al checkout...");
     closeCart();
   };
 
@@ -52,7 +57,6 @@ const CartButton: React.FC = () => {
 
   return (
     <>
-      
       <div className="cart-button-container">
         <button className="cart-button" onClick={toggleCart}>
           <div className="cart-icon">
@@ -65,29 +69,38 @@ const CartButton: React.FC = () => {
           <div className="cart-popup">
             <div className="cart-popup-header">
               <h3 className="cart-popup-title">Tu Carrito</h3>
-              <button className="close-button" onClick={closeCart}>✕</button>
+              <button className="close-button" onClick={closeCart}>
+                ✕
+              </button>
             </div>
 
             {items.length === 0 ? (
-              <div className="cart-empty">
-                Tu carrito está vacío
-              </div>
+              <div className="cart-empty">Tu carrito está vacío</div>
             ) : (
               <>
                 <div className="cart-items">
                   {items.map((item) => (
-                    <div key={`${item.id}-${item.size}-${item.color}`} className="cart-item">
+                    <div
+                      key={`${item.id}-${item.size}-${item.color}`}
+                      className="cart-item"
+                    >
                       <div className="cart-item-image">
-                        {item.image ? (
-                          <Image 
-                            src={item.image} 
-                            alt={item.name} 
-                            width={40} 
-                            height={40} 
-                            objectFit="cover" 
+                        {item ? (
+                          <Image
+                            src="/images/gaze4.jpg"
+                            alt={item.name}
+                            width={40}
+                            height={40}
+                            objectFit="cover"
                           />
                         ) : (
-                          <div style={{ width: '40px', height: '40px', backgroundColor: '#f0f0f0' }} />
+                          <div
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              backgroundColor: "#f0f0f0",
+                            }}
+                          />
                         )}
                       </div>
                       <div className="cart-item-info">
@@ -95,7 +108,7 @@ const CartButton: React.FC = () => {
                         {(item.size || item.color) && (
                           <div className="cart-item-details">
                             {item.size && `Tamaño: ${item.size}`}
-                            {item.size && item.color && ' | '}
+                            {item.size && item.color && " | "}
                             {item.color && `Color: ${item.color}`}
                           </div>
                         )}
@@ -104,21 +117,25 @@ const CartButton: React.FC = () => {
                         </div>
                       </div>
                       <div className="cart-quantity-control">
-                        <button 
+                        <button
                           className="cart-quantity-button"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
                         >
                           -
                         </button>
                         <span className="cart-quantity">{item.quantity}</span>
-                        <button 
+                        <button
                           className="cart-quantity-button"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
                         >
                           +
                         </button>
                       </div>
-                      <button 
+                      <button
                         className="remove-button"
                         onClick={() => removeItem(item.id)}
                       >
@@ -128,16 +145,14 @@ const CartButton: React.FC = () => {
                   ))}
                 </div>
 
-             
-
                 <div className="cart-actions">
-                  <button 
+                  <button
                     className="cart-action-button clear-button"
                     onClick={clearCart}
                   >
                     Vaciar
                   </button>
-                  <button 
+                  <button
                     className="cart-action-button checkout-button"
                     onClick={handleCheckout}
                   >

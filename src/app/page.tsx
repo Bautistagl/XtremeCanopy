@@ -3,15 +3,15 @@ import ProductCard from '@/components/Card/Card';
 import HeroSection from '@/components/Hero/HeroSection';
 import Image from 'next/image';
 import Link from 'next/link';
-import img from  '../images/blackLogo.jpeg'
-import img2 from '../images/gaze4.jpg'
 
-import { Feature } from '@/components/Feature/Feature';
-import { AboutUs } from '@/components/AboutUs/AboutUs';
-import { Contact } from '@/components/Contact/Contact';
-import InteractiveBentoGallery from '@/components/Gallery/Gallery';
-import CartButton from '@/components/Cart/CartButton';
-import Footer from '@/components/Footer/Footer';
+
+
+import { Feature } from "@/components/Feature/Feature";
+import { AboutUs } from "@/components/AboutUs/AboutUs";
+import { Contact } from "@/components/Contact/Contact";
+import InteractiveBentoGallery from "@/components/Gallery/Gallery";
+import CartButton from "@/components/Cart/CartButton";
+import Footer from "@/components/Footer/Footer";
 
 const mediaItems = [
   {
@@ -70,57 +70,68 @@ const mediaItems = [
     url: "https://cdn.pixabay.com/video/2020/05/25/40130-424930032_large.mp4",
     span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2 ",
   },
-]
-
+];
 
 export default function Home() {
-
   return (
     <div>
-  <header>
-      <div className="container header-container">
-        <Link href="/" className="logo">
-          <Image
-            src={img}
-            alt="CarpaPro logo"
-            width={150}
-            height={40}
-          />
-        </Link>
-        <nav>
-          <ul>
-            <li><Link href="/">Inicio</Link></li>
-            <li><Link href="#" scroll={false}>Información</Link></li>
-            <li><Link href="#" scroll={false}>Productos</Link></li>
-            <li><Link href="#" scroll={false}>Contacto</Link></li>
-            <li><CartButton /></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+      <header>
+        <div className="container header-container">
+          <Link href="/" className="logo">
+            <Image
+              src="/images/blackLogo.jpeg"
+              alt="CarpaPro logo"
+              width={150}
+              height={40}
+            />
+          </Link>
+          <nav>
+            <ul>
+              <li>
+                <Link href="/">Inicio</Link>
+              </li>
+              <li>
+                <Link href="#" scroll={false}>
+                  Información
+                </Link>
+              </li>
+              <li>
+                <Link href="#" scroll={false}>
+                  Productos
+                </Link>
+              </li>
+              <li>
+                <Link href="#" scroll={false}>
+                  Contacto
+                </Link>
+              </li>
+              <li>
+                <CartButton />
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
 
       <main>
-        
+        <HeroSection
+          title="Gazebos Portátiles Premium"
+          subtitle="Soluciones versátiles para exteriores que combinan funcionalidad y estilo."
+          ctaText="Ver mas variedades"
+          ctaAction={() => console.log("CTA Clicked")}
+        />
 
-   
-        <HeroSection 
-        title="Gazebos Portátiles Premium"
-        subtitle="Soluciones versátiles para exteriores que combinan funcionalidad y estilo."
-        ctaText="Ver mas variedades"
-        ctaAction={() => console.log('CTA Clicked')}
-      />
-
-        <Feature/>
+        <Feature />
         <InteractiveBentoGallery
           mediaItems={mediaItems}
           title="Gallery Shots Collection"
           description="Drag and explore our curated collection of shots"
         />
-        <AboutUs/>
-        <Contact/>
+        <AboutUs />
+        <Contact />
       </main>
 
-      <Footer/>
+      <Footer />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 /* Feature.css */
 
 .feature-background {
-  background: url('../../images/background.png')
+  background: url('/images/background.png')
 }
 .feature-container {
     max-width: 75%;

@@ -32,60 +32,68 @@ const CheckIcon: React.FC = () => {
 const Feature: React.FC = () => {
   return (
     <div className="feature-background">
-      
-    <div className="feature-container">
-      <div className="feature-inner-container">
-        <div className="feature-grid">
-          <div className="feature-content">
-            <div className="feature-header">
-              <div>
-                <Badge>Platform</Badge>
+      <div className="feature-container">
+        <div className="feature-inner-container">
+          <div className="feature-grid">
+            <div className="feature-content">
+              <div className="feature-header">
+                <div>
+                  <Badge>Platform</Badge>
+                </div>
+                <div className="feature-title-container">
+                  <h2 className="feature-title">Uniones Reforzadas</h2>
+                  <p className="feature-subtitle">
+                    Con piezas de extrusión de aluminio.
+                  </p>
+                </div>
               </div>
-              <div className="feature-title-container">
-                <h2 className="feature-title">
-                  Uniones Reforzadas
-                </h2>
-                <p className="feature-subtitle">
-                Con piezas de extrusión de aluminio.
-                </p>
+              <div className="feature-benefits">
+                <div className="feature-benefit-item">
+                  <CheckIcon />
+                  <div className="feature-benefit-text">
+                    <p>Maxima resistencia</p>
+                    <p className="feature-benefit-description">
+                      Las piezas de extrusión de aluminio brindan una estructura
+                      sólida y duradera, capaz de soportar condiciones
+                      exigentes.
+                    </p>
+                  </div>
+                </div>
+                <div className="feature-benefit-item">
+                  <CheckIcon />
+                  <div className="feature-benefit-text">
+                    <p> Diseño optimizado</p>
+                    <p className="feature-benefit-description">
+                      Las uniones reforzadas mejoran la estabilidad y prolongan
+                      la vida útil del gazebo, asegurando un rendimiento
+                      superior en cualquier entorno.
+                    </p>
+                  </div>
+                </div>
+                <div className="feature-benefit-item">
+                  <CheckIcon />
+                  <div className="feature-benefit-text">
+                    <p>Ligereza y facilidad de transporte</p>
+                    <p className="feature-benefit-description">
+                      El aluminio es un material liviano, lo que facilita el
+                      montaje, desmontaje y transporte del gazebo sin
+                      comprometer su resistencia.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="feature-benefits">
-              <div className="feature-benefit-item">
-                <CheckIcon />
-                <div className="feature-benefit-text">
-                  <p>Maxima resistencia</p>
-                  <p className="feature-benefit-description">
-                  Las piezas de extrusión de aluminio brindan una estructura sólida y duradera, capaz de soportar condiciones exigentes.
-                  </p>
-                </div>
-              </div>
-              <div className="feature-benefit-item">
-                <CheckIcon />
-                <div className="feature-benefit-text">
-                  <p> Diseño optimizado</p>
-                  <p className="feature-benefit-description">
-                  Las uniones reforzadas mejoran la estabilidad y prolongan la vida útil del gazebo, asegurando un rendimiento superior en cualquier entorno.
-                  </p>
-                </div>
-              </div>
-              <div className="feature-benefit-item">
-                <CheckIcon />
-                <div className="feature-benefit-text">
-                  <p>Ligereza y facilidad de transporte</p>
-                  <p className="feature-benefit-description">
-                  El aluminio es un material liviano, lo que facilita el montaje, desmontaje y transporte del gazebo sin comprometer su resistencia.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
 
-            <Image  alt='' width={400} height={250} src={uniones} className="feature-image" />
-       
+            <Image
+              alt=""
+              width={400}
+              height={250}
+              src="/images/fotoLanding.jpeg"
+              className="feature-image"
+            />
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };
