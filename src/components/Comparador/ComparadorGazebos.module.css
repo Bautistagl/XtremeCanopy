@@ -1,0 +1,370 @@
+/* components/ComparadorGazebos.module.css */
+
+.comparadorContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0px 20px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #ffffff;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 30px;
+  }
+  
+  .title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .title span:first-child {
+    color: #ff6600;
+  }
+  
+  .subtitle {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  .description {
+    font-size: 16px;
+    color: #777;
+  }
+  
+  .selectorModelos {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .selectorModelo {
+    width: 180px;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+  
+  .selectorModelo:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modeloSeleccionado {
+    border-color: #0088ff;
+    background-color: #f0f8ff;
+  }
+  
+  .categoriaModelo {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 5px;
+  }
+  
+  .nombreModelo {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+  
+  .botonSeleccionar {
+    background-color: #0088ff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .botonSeleccionar:hover {
+    background-color: #0066cc;
+  }
+  
+  .botonSeleccionado {
+    background-color: #00aa44;
+  }
+  
+  .precioModelo {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+  }
+  
+  .tablaComparativa {
+    overflow-x: auto;
+    margin-bottom: 30px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+  }
+  
+  .tabla {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  
+  .caracteristicaHeader {
+    background-color: #f8f8f8;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    color: #333;
+    min-width: 200px;
+  }
+  
+  .modeloHeader {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    min-width: 180px;
+  }
+  
+  .modeloHeaderContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .modeloCategoria {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 5px;
+  }
+  
+  .modeloNombre {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #0088ff;
+  }
+  
+  .botonComprar {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .botonComprar:hover {
+    background-color: #e65c00;
+  }
+  
+  .enlaceTienda {
+    font-size: 12px;
+    color: #0088ff;
+    text-decoration: none;
+  }
+  
+  .enlaceTienda:hover {
+    text-decoration: underline;
+  }
+  
+  .caracteristicaName {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    background-color: #f8f8f8;
+  }
+  
+  .modeloData {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .modeloData:nth-child(odd) {
+    background-color: #fafafa;
+  }
+  
+  .resistenciaContainer {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+  }
+  
+  .estrella {
+    font-size: 18px;
+    color: #ddd;
+  }
+  
+  .estrellaActiva {
+    color: #ffcc00;
+  }
+  
+  .popularidadContainer {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+  
+  .punto {
+    font-size: 24px;
+    color: #ddd;
+    line-height: 1;
+  }
+  
+  .puntoActivo {
+    color: #0088ff;
+  }
+  
+  .coloresContainer {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  
+  .colorCirculo {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 2px;
+  }
+  
+  .pesoContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .pesoItem {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    gap: 5px;
+  }
+  
+  .pesoValor {
+    font-weight: 600;
+    justify-content: flex-start;
+    text-align: center;
+    margin: auto 10px;
+    margin-left: 0px;
+    width: 70px;
+  }
+  
+  .pesoTamano {
+    color: #777;
+    font-size: 12px;
+    justify-content: center;
+    text-align: center;
+    margin: auto 10px;
+    width: 70px;
+  }
+  
+  .aperturaContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .aperturaIcono {
+    font-size: 18px;
+  }
+  
+  .modularContainer {
+    text-align: center;
+  }
+  
+  .modularIcono {
+    font-size: 20px;
+    color: #0088ff;
+  }
+  
+  .footerCell {
+    padding: 20px 15px;
+    text-align: center;
+  }
+  
+  .botonComprarFooter {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    width: 80%;
+  }
+  
+  .botonComprarFooter:hover {
+    background-color: #e65c00;
+  }
+  
+  .notaFinal {
+    text-align: center;
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .selectorModelo {
+      width: 150px;
+    }
+    
+    .tabla {
+      font-size: 14px;
+    }
+    
+    .botonComprar, .botonComprarFooter {
+      padding: 8px 15px;
+      font-size: 13px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .selectorModelo {
+      width: 120px;
+      padding: 10px;
+    }
+    
+    .nombreModelo {
+      font-size: 16px;
+    }
+    
+    .botonSeleccionar {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+    
+    .tabla {
+      font-size: 12px;
+    }
+  }

@@ -1,0 +1,131 @@
+/* Feature.css */
+
+.feature-background {
+  background: url('../../images/background.png')
+}
+.feature-container {
+    max-width: 75%;
+    
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+ 
+  
+  /* .feature-inner-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+  } */
+  
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 32px;
+  }
+  
+  @media (min-width: 1024px) {
+    .feature-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  .feature-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .feature-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .feature-title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .feature-title {
+    font-size: 30px;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    max-width: 600px;
+    text-align: left;
+    font-weight: 400;
+  }
+  
+  @media (min-width: 1024px) {
+    .feature-title {
+      font-size: 48px;
+    }
+  }
+  
+  .feature-subtitle {
+    font-size: 18px;
+    line-height: 1.5;
+    letter-spacing: -0.015em;
+    max-width: 600px;
+    text-align: left;
+    color: #6b7280;
+  }
+  
+  .badge {
+    display: inline-block;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    background-color: transparent;
+  }
+  
+  .feature-benefits {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .feature-benefits {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .feature-benefit-item {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  
+  .check-icon {
+    width: 16px;
+    height: 16px;
+    margin-top: 8px;
+    color: #3b82f6; /* primary color - adjust as needed */
+  }
+  
+  .feature-benefit-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .feature-benefit-description {
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  .feature-image {
+    background-color: #f3f4f6;
+    border-radius: 6px;
+    aspect-ratio: 1/1;
+    margin: auto;
+  }

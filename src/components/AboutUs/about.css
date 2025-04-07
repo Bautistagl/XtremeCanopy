@@ -1,0 +1,258 @@
+/* AboutUs.css */
+
+.about-us-container {
+    width: 100%;
+    padding: 80px 0;
+    background-color: #ffffff;
+  }
+  
+  @media (min-width: 1024px) {
+    .about-us-container {
+      padding: 120px 0;
+    }
+  }
+  
+  .about-us-inner-container {
+    max-width: 70%;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+  
+  /* Header styles */
+  .about-us-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .badge {
+    display: inline-block;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    background-color: transparent;
+  }
+  
+  .about-us-title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .about-us-title {
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+  }
+  
+  @media (min-width: 1024px) {
+    .about-us-title {
+      font-size: 48px;
+    }
+  }
+  
+  .about-us-subtitle {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #6b7280;
+  }
+  
+  /* Values section styles */
+  .about-us-values {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding: 48px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+  }
+  
+  @media (min-width: 768px) {
+    .about-us-values {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+  
+  .about-us-values-description {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .about-us-values-title {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+  
+  .about-us-values-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #4b5563;
+  }
+  
+  .about-us-values-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+  }
+  
+  @media (min-width: 768px) {
+    .about-us-values-stats {
+      flex: 1;
+      justify-content: flex-end;
+    }
+  }
+  
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 120px;
+  }
+  
+  .stat-number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #3b82f6;
+  }
+  
+  .stat-label {
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  /* Team section styles */
+  .about-us-team {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  
+  .about-us-team-title {
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  @media (min-width: 640px) {
+    .team-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .team-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .team-member {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .team-member:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .team-member-image {
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .team-member-info {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .team-member-name {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .team-member-role {
+    font-size: 14px;
+    color: #3b82f6;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .team-member-bio {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  /* Mission statement section */
+  .about-us-mission {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  @media (min-width: 768px) {
+    .about-us-mission {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  .mission-content {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+  }
+  
+  .mission-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .mission-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #4b5563;
+  }
+  
+  .mission-image {
+    background-color: #f3f4f6;
+    min-height: 300px;
+    background-image: url('../../images/fotoMision.jpg');
+    background-size: cover;
+    background-position: center;
+  }
