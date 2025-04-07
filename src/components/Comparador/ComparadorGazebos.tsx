@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styles from './ComparadorGazebos.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from "../../images/blackLogo.jpeg"
+
 import "../../app/Hex40/Detalle.css"
 
 interface ModeloGazebo {
@@ -151,7 +151,12 @@ const ComparadorGazebos: React.FC = () => {
       <header className="header">
         <Link href="/">
           <div className="logo">
-            <Image height={100} width={150} src={logo} alt="Xtreme Logo" />
+            <Image
+              height={100}
+              width={150}
+              src="/images/blackLogo.jpeg"
+              alt="Xtreme Logo"
+            />
           </div>
         </Link>
         <nav className="navigation">

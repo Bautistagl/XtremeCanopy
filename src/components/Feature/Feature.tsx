@@ -1,7 +1,7 @@
 import React from 'react';
 import './Feature.css';
 import Image from 'next/image';
-import uniones from '../../images/fotoLanding.jpeg'
+
 // Creating our own Badge component since we're not using shadcn
 const Badge: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <span className="badge">{children}</span>;
