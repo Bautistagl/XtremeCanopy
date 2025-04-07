@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useCart } from './CartContext';
 import Image from "next/image";
 import "./cart.css";
-// Estilos CSS para el componente
+import CheckoutPopup from "../CheckoutPopUp/Component";
 
 // Crear un ícono de carrito simple usando SVG
 const CartIcon = () => (
@@ -25,8 +25,44 @@ const CartIcon = () => (
   </svg>
 );
 
+const ColorCircle: React.FC<{ color: string }> = ({ color }) => {
+  // Convertir nombres de colores comunes a sus valores hexadecimales
+  const getColorValue = (colorName: string): string => {
+    const colorMap: Record<string, string> = {
+      negro: "#000000",
+      blanco: "#FFFFFF",
+      rojo: "#FF0000",
+      azul: "#0000FF",
+      verde: "#008000",
+      naranja: "#FFA500",
+
+      // Puedes agregar más colores según necesites
+    };
+
+    // Si el color está en el mapa, usarlo, de lo contrario intentar usar el nombre directamente
+    return colorMap[colorName.toLowerCase()] || colorName;
+  };
+
+  return (
+    <span
+      className="color-circle"
+      style={{
+        display: "inline-block",
+        width: "12px",
+        height: "12px",
+        borderRadius: "50%",
+        backgroundColor: getColorValue(color),
+        border: "1px solid #ccc",
+        marginRight: "5px",
+        verticalAlign: "middle",
+      }}
+    />
+  );
+};
+
 const CartButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const {
     items,
     totalItems,
@@ -44,16 +80,18 @@ const CartButton: React.FC = () => {
     setIsOpen(false);
   };
 
-  const handleCheckout = () => {
-    // Aquí podrías redirigir a una página de checkout
-    alert("Redirigiendo al checkout...");
-    closeCart();
+  const handleOpenCheckout = () => {
+    setIsCheckoutOpen(true);
+    // Opcionalmente, puedes cerrar el carrito cuando abras el checkout
+    setIsOpen(false);
   };
 
-  // Generar un nombre para nuestro placeholder de imagen
-  const getImagePlaceholder = (name: string) => {
-    return `/img/product-placeholder.jpg`;
+  const handleCloseCheckout = () => {
+    setIsCheckoutOpen(false);
   };
+
+  // Imagen por defecto si no hay una específica
+  const defaultImage = "/images/product-placeholder.jpg";
 
   return (
     <>
@@ -85,23 +123,13 @@ const CartButton: React.FC = () => {
                       className="cart-item"
                     >
                       <div className="cart-item-image">
-                        {item ? (
-                          <Image
-                            src="/images/gaze4.jpg"
-                            alt={item.name}
-                            width={40}
-                            height={40}
-                            objectFit="cover"
-                          />
-                        ) : (
-                          <div
-                            style={{
-                              width: "40px",
-                              height: "40px",
-                              backgroundColor: "#f0f0f0",
-                            }}
-                          />
-                        )}
+                        <Image
+                          src={item.image || defaultImage}
+                          alt={item.name}
+                          width={40}
+                          height={40}
+                          style={{ objectFit: "cover" }}
+                        />
                       </div>
                       <div className="cart-item-info">
                         <div className="cart-item-name">{item.name}</div>
@@ -109,12 +137,14 @@ const CartButton: React.FC = () => {
                           <div className="cart-item-details">
                             {item.size && `Tamaño: ${item.size}`}
                             {item.size && item.color && " | "}
-                            {item.color && `Color: ${item.color}`}
+                            {item.color && (
+                              <>
+                                Color: <ColorCircle color={item.color} />
+                                {item.color}
+                              </>
+                            )}
                           </div>
                         )}
-                        <div className="cart-item-price">
-                          Cantidad: {item.quantity}
-                        </div>
                       </div>
                       <div className="cart-quantity-control">
                         <button
@@ -154,7 +184,7 @@ const CartButton: React.FC = () => {
                   </button>
                   <button
                     className="cart-action-button checkout-button"
-                    onClick={handleCheckout}
+                    onClick={handleOpenCheckout}
                   >
                     Realizar Pedido
                   </button>
@@ -163,6 +193,8 @@ const CartButton: React.FC = () => {
             )}
           </div>
         )}
+
+        <CheckoutPopup isOpen={isCheckoutOpen} onClose={handleCloseCheckout} />
       </div>
     </>
   );

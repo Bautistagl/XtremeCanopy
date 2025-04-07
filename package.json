@@ -23,7 +23,8 @@
     "next": "^15.2.2",
     "nodemailer": "^6.10.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/bun": "^1.2.5",

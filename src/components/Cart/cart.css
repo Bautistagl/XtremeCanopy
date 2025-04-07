@@ -97,13 +97,14 @@
     border-bottom: 1px solid #f0f0f0;
   }
   
-  .cart-item-image {
+  .cart-item-image img {
     width: 40px;
     height: 40px;
     margin-right: 12px;
     position: relative;
     border-radius: 4px;
     overflow: hidden;
+    object-fit: contain;
     background-color: #f0f0f0;
   }
   

@@ -72,7 +72,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       icon: "",
       description:
         "La categoría HEX 50 está diseñada para resistir cualquier tipo de clima, desde sol intenso hasta lluvias fuertes o viento. Su estructura de aluminio de alta gama y su techo impermeable proporcionan una cobertura confiable durante todo el año, sin importar las condiciones meteorológicas.",
-      image: "/images/gaze6.jpg",
+      image: "/images/gaze2.jpg",
       tag: "HEX 50 3X6",
       link: "/Hex50",
     },

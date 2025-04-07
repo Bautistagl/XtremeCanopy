@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/Cart/CartContext";
 import { formatProductForCart } from "@/components/Cart/addToCartHelper";
+import QuotationPopup from "@/components/ContactPopUp/ContactPopUp";
 import Footer from "@/components/Footer/Footer";
 interface SizeOption {
   size: string;
@@ -69,6 +70,22 @@ const ProductDetail: React.FC = () => {
     const selectedColorName =
       colors.find((c) => c.value === selectedColor)?.name || selectedColor;
 
+    // Asignar imagen según el tamaño seleccionado
+    let sizeSpecificImage = "";
+    switch (selectedSize) {
+      case "3x3":
+        sizeSpecificImage = "/images/3x3tmb.png";
+        break;
+      case "3x4.5":
+        sizeSpecificImage = "/images/3x4.5tmb.png";
+        break;
+      case "3x6":
+        sizeSpecificImage = "/images/3x6tmb.png";
+        break;
+      case "Hexagonal":
+        sizeSpecificImage = "/images/hexatmb.png";
+    }
+
     // Formatear el producto para el carrito
     const productToAdd = formatProductForCart(
       "Gazebo Aluminio HEX 40",
@@ -76,7 +93,7 @@ const ProductDetail: React.FC = () => {
       quantity,
       selectedSize,
       selectedColorName,
-      mainImage.src // Pasar la URL de la imagen actual
+      sizeSpecificImage // Usamos la imagen específica
     );
 
     // Añadir el producto al carrito
@@ -84,10 +101,10 @@ const ProductDetail: React.FC = () => {
 
     // Mostrar confirmación
     alert(`Producto agregado al carrito:
-      - ${productToAdd.name}
-      - Tamaño: ${productToAdd.size}
-      - Color: ${productToAdd.color}
-      - Cantidad: ${productToAdd.quantity}`);
+       - ${productToAdd.name}
+       - Tamaño: ${productToAdd.size}
+       - Color: ${productToAdd.color}
+       - Cantidad: ${productToAdd.quantity}`);
   };
 
   // Función para obtener precio según tamaño
@@ -379,7 +396,13 @@ const ProductDetail: React.FC = () => {
           </p>
         </div>
       </section>
-
+      <QuotationPopup
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        productName={"Gazebo Aluminio HEX 40"}
+        selectedSize={selectedSize}
+        selectedColor={selectedColor}
+      />
       <Footer />
     </div>
   );

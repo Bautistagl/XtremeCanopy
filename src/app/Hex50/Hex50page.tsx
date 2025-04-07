@@ -70,6 +70,22 @@ const Hex50Screen: React.FC = () => {
     const selectedColorName =
       colors.find((c) => c.value === selectedColor)?.name || selectedColor;
 
+    // Asignar imagen según el tamaño seleccionado
+    let sizeSpecificImage = "";
+    switch (selectedSize) {
+      case "3x3":
+        sizeSpecificImage = "/images/3x3tmb.png";
+        break;
+      case "3x4.5":
+        sizeSpecificImage = "/images/3x4.5tmb.png";
+        break;
+      case "3x6":
+        sizeSpecificImage = "/images/3x6tmb.png";
+        break;
+      default:
+        sizeSpecificImage = "/images/3x3tmb.png";
+    }
+
     // Formatear el producto para el carrito
     const productToAdd = formatProductForCart(
       "Gazebo Aluminio HEX 50",
@@ -77,7 +93,7 @@ const Hex50Screen: React.FC = () => {
       quantity,
       selectedSize,
       selectedColorName,
-      mainImage.src // Pasar la URL de la imagen actual
+      sizeSpecificImage // Usamos la imagen específica
     );
 
     // Añadir el producto al carrito

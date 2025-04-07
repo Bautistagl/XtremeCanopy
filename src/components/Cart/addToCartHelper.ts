@@ -1,5 +1,5 @@
 import { CartItem } from "./CartContext"; 
-
+import { v4 as uuidv4 } from 'uuid';
 // Función auxiliar para generar IDs únicos
 export const generateUniqueId = (productName: string, size?: string, color?: string): string => {
   return `${productName.toLowerCase().replace(/\s+/g, '-')}-${size || 'default'}-${color || 'default'}`;
@@ -15,13 +15,13 @@ export const formatProductForCart = (
   image?: string
 ): CartItem => {
   return {
-    id: generateUniqueId(name, size, color),
+    id: uuidv4(), 
     name,
     price,
     quantity,
     size,
     color,
-    image
+    image: image || "/images/product-placeholder.jpg" // Usa la imagen proporcionada o un placeholder
   };
 };
 
