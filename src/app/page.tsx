@@ -35,7 +35,7 @@ const mockProducts: Product[] = [
   {
     id: "3",
     name: "Hex 50",
-    imageUrl: "/images/picLand3.jpg",
+    imageUrl: "/images/picLand3.JPG",
     price: 49.99,
     slug: "product-three",
     subtitle: "3x4.5 Azul",
@@ -43,7 +43,7 @@ const mockProducts: Product[] = [
   {
     id: "4",
     name: "Hex 50",
-    imageUrl: "/images/picLand4.jpg",
+    imageUrl: "/images/picLand4.JPG",
     price: 59.99,
     slug: "product-four",
     subtitle: "3x4.5 Azul",
