@@ -38,7 +38,7 @@ const Feature: React.FC = () => {
             <div className="feature-content">
               <div className="feature-header">
                 <div>
-                  <Badge>Platform</Badge>
+                  <Badge>Calidad</Badge>
                 </div>
                 <div className="feature-title-container">
                   <h2 className="feature-title">Uniones Reforzadas</h2>
