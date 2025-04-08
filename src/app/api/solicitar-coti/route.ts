@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h1 style="color: #4a90e2;">¡Gracias por tu pedido!</h1>
             <p>Hola ${cliente.nombre},</p>
-            <p>Hemos recibido tu pedido correctamente. Nos vamos a estar comunicando por whatsapp en breve. A continuación encontrarás un resumen:</p>
+            <p>Hemos recibido tu pedido correctamente. A continuación encontrarás un resumen:</p>
             
             <h2 style="color: #4a90e2; margin-top: 20px;">Resumen del Pedido:</h2>
             <table style="width: 100%; border-collapse: collapse;">

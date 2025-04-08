@@ -17,57 +17,57 @@ const mediaItems = [
   {
     id: 1,
     type: "image",
-    title: "HEX 50",
+    title: "Anurag Mishra",
     desc: "Driven, innovative, visionary",
-    url: "/images/picLand.jpg",
+    url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
     span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2",
   },
   {
     id: 2,
-    type: "image",
-    title: "HEX 50",
+    type: "video",
+    title: "Dog Puppy",
     desc: "Adorable loyal companion.",
-    url: "/images/picLand3.JPG",
+    url: "https://cdn.pixabay.com/video/2024/07/24/222837_large.mp4",
     span: "md:col-span-2 md:row-span-2 col-span-1 sm:col-span-2 sm:row-span-2",
   },
   {
     id: 3,
     type: "image",
-    title: "HEX 40",
+    title: "Forest Path",
     desc: "Mystical forest trail",
-    url: "/images/picLand2.jpg",
+    url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e",
     span: "md:col-span-1 md:row-span-3 sm:col-span-2 sm:row-span-2 ",
   },
   {
     id: 4,
     type: "image",
-    title: "HEX 50",
+    title: "Falling Leaves",
     desc: "Autumn scenery",
-    url: "/images/picLand4.JPG",
+    url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
     span: "md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2 ",
   },
   {
     id: 5,
-    type: "image",
-    title: "HEX 40",
+    type: "video",
+    title: "Bird Parrot",
     desc: "Vibrant feathered charm",
-    url: "/images/picLand5.JPG",
+    url: "https://cdn.pixabay.com/video/2020/07/30/46026-447087782_large.mp4",
     span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2 ",
   },
   {
     id: 6,
     type: "image",
-    title: "HEX 50",
+    title: "Beach Paradise",
     desc: "Sunny tropical beach",
-    url: "/images/picLand6.JPG",
+    url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
     span: "md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2 ",
   },
   {
     id: 7,
-    type: "image",
-    title: "HEX 40",
+    type: "video",
+    title: "Shiva Temple",
     desc: "Peaceful Shiva sanctuary.",
-    url: "/images/picLand3.JPG",
+    url: "https://cdn.pixabay.com/video/2020/05/25/40130-424930032_large.mp4",
     span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2 ",
   },
 ];
@@ -91,18 +91,18 @@ export default function Home() {
                 <Link href="/">Inicio</Link>
               </li>
               <li>
-                <Link href="/Hex40" scroll={false}>
-                  Hex 40
+                <Link href="#" scroll={false}>
+                  Información
                 </Link>
               </li>
               <li>
-                <Link href="/Hex50" scroll={false}>
-                  Hex 50
+                <Link href="#" scroll={false}>
+                  Productos
                 </Link>
               </li>
               <li>
-                <Link href="/comparador" scroll={false}>
-                  Comparador
+                <Link href="#" scroll={false}>
+                  Contacto
                 </Link>
               </li>
               <li>
@@ -124,8 +124,8 @@ export default function Home() {
         <Feature />
         <InteractiveBentoGallery
           mediaItems={mediaItems}
-          title=""
-          description=""
+          title="Gallery Shots Collection"
+          description="Drag and explore our curated collection of shots"
         />
         <AboutUs />
         <Contact />

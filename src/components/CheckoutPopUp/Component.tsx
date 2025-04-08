@@ -246,44 +246,38 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
   return (
     <div className="checkout-overlay">
       <div className="checkout-container">
-        <button className="close-button" onClick={onClose}>
-          ×
-        </button>
-
+        <button className="close-button" onClick={onClose}>×</button>
+        
         {submitSuccess ? (
           <div className="success-message">
             <svg viewBox="0 0 24 24" className="success-icon">
               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
             </svg>
             <h3>¡Pedido realizado con éxito!</h3>
-            <p>
-              Hemos recibido tu pedido. Te enviaremos un correo con los detalles
-              y pasos a seguir.
-            </p>
+            <p>Hemos recibido tu pedido. Te enviaremos un correo con los detalles y pasos a seguir.</p>
           </div>
         ) : (
           <>
             <div className="checkout-header">
               <h2>Finalizar Compra</h2>
               <div className="checkout-steps">
-                <div className={`step ${currentStep === 1 ? "active" : ""}`}>
+                <div className={`step ${currentStep === 1 ? 'active' : ''}`}>
                   1. Revisar Carrito
                 </div>
-                <div className={`step ${currentStep === 2 ? "active" : ""}`}>
+                <div className={`step ${currentStep === 2 ? 'active' : ''}`}>
                   2. Información de Envío
                 </div>
               </div>
             </div>
-
+            
             <div className="checkout-content">
               {currentStep === 1 && (
                 <div className="cart-summary">
                   <h3>Resumen del Pedido</h3>
-
+                  
                   {items.length === 0 ? (
                     <div className="empty-cart-message">
-                      Tu carrito está vacío. Por favor, añade productos antes de
-                      continuar.
+                      Tu carrito está vacío. Por favor, añade productos antes de continuar.
                     </div>
                   ) : (
                     <>
@@ -308,28 +302,39 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                                 {item.size && <span>Tamaño: {item.size}</span>}
                                 {item.color && (
                                   <span>
-                                    Color: <ColorCircle color={item.color} />
-                                    {item.color}
+                                    Color: <ColorCircle color={item.color} />{item.color}
                                   </span>
                                 )}
                                 <span>Cantidad: {item.quantity}</span>
                               </div>
                             </div>
+                            <div className="item-price">
+                              {formatPrice(item.price * item.quantity)}
+                            </div>
                           </div>
                         ))}
                       </div>
-
+                      
                       <div className="cart-total">
                         <div className="total-items">
                           Productos: <span>{totalItems}</span>
                         </div>
+                        <div className="subtotal">
+                          Subtotal: <span>{formatPrice(totalPrice)}</span>
+                        </div>
+                        <div className="shipping">
+                          Envío: <span>A calcular</span>
+                        </div>
+                        <div className="total-price">
+                          Total: <span>{formatPrice(totalPrice)}</span>
+                        </div>
                       </div>
-
+                      
                       <div className="cart-actions">
                         <button className="btn-secondary" onClick={onClose}>
                           Volver al Carrito
                         </button>
-                        <button
+                        <button 
                           className="btn-primary"
                           onClick={nextStep}
                           disabled={items.length === 0}
@@ -349,10 +354,10 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                       <p>{submitError}</p>
                     </div>
                   )}
-
+                  
                   <div className="form-section">
                     <h3>Información Personal</h3>
-
+                    
                     <div className="form-row">
                       <div className="form-group half">
                         <label htmlFor="nombre">Nombre *</label>
@@ -362,13 +367,11 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                           name="nombre"
                           value={formData.nombre}
                           onChange={handleChange}
-                          className={errors.nombre ? "error" : ""}
+                          className={errors.nombre ? 'error' : ''}
                         />
-                        {errors.nombre && (
-                          <span className="error-message">{errors.nombre}</span>
-                        )}
+                        {errors.nombre && <span className="error-message">{errors.nombre}</span>}
                       </div>
-
+                      
                       <div className="form-group half">
                         <label htmlFor="apellido">Apellido *</label>
                         <input
@@ -377,16 +380,12 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                           name="apellido"
                           value={formData.apellido}
                           onChange={handleChange}
-                          className={errors.apellido ? "error" : ""}
+                          className={errors.apellido ? 'error' : ''}
                         />
-                        {errors.apellido && (
-                          <span className="error-message">
-                            {errors.apellido}
-                          </span>
-                        )}
+                        {errors.apellido && <span className="error-message">{errors.apellido}</span>}
                       </div>
                     </div>
-
+                    
                     <div className="form-row">
                       <div className="form-group half">
                         <label htmlFor="email">Email *</label>
@@ -396,13 +395,11 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
-                          className={errors.email ? "error" : ""}
+                          className={errors.email ? 'error' : ''}
                         />
-                        {errors.email && (
-                          <span className="error-message">{errors.email}</span>
-                        )}
+                        {errors.email && <span className="error-message">{errors.email}</span>}
                       </div>
-
+                      
                       <div className="form-group half">
                         <label htmlFor="telefono">Teléfono *</label>
                         <input
@@ -411,20 +408,16 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                           name="telefono"
                           value={formData.telefono}
                           onChange={handleChange}
-                          className={errors.telefono ? "error" : ""}
+                          className={errors.telefono ? 'error' : ''}
                         />
-                        {errors.telefono && (
-                          <span className="error-message">
-                            {errors.telefono}
-                          </span>
-                        )}
+                        {errors.telefono && <span className="error-message">{errors.telefono}</span>}
                       </div>
                     </div>
                   </div>
-
+                  
                   <div className="form-section">
                     <h3>Dirección de Envío</h3>
-
+                    
                     <div className="form-group">
                       <label htmlFor="direccion">Dirección *</label>
                       <input
@@ -433,16 +426,12 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                         name="direccion"
                         value={formData.direccion}
                         onChange={handleChange}
-                        className={errors.direccion ? "error" : ""}
+                        className={errors.direccion ? 'error' : ''}
                         placeholder="Calle, número, depto/casa"
                       />
-                      {errors.direccion && (
-                        <span className="error-message">
-                          {errors.direccion}
-                        </span>
-                      )}
+                      {errors.direccion && <span className="error-message">{errors.direccion}</span>}
                     </div>
-
+                    
                     <div className="form-row">
                       <div className="form-group half">
                         <label htmlFor="ciudad">Ciudad *</label>
@@ -452,13 +441,11 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                           name="ciudad"
                           value={formData.ciudad}
                           onChange={handleChange}
-                          className={errors.ciudad ? "error" : ""}
+                          className={errors.ciudad ? 'error' : ''}
                         />
-                        {errors.ciudad && (
-                          <span className="error-message">{errors.ciudad}</span>
-                        )}
+                        {errors.ciudad && <span className="error-message">{errors.ciudad}</span>}
                       </div>
-
+                      
                       <div className="form-group half">
                         <label htmlFor="codigoPostal">Código Postal *</label>
                         <input
@@ -467,17 +454,14 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                           name="codigoPostal"
                           value={formData.codigoPostal}
                           onChange={handleChange}
-                          className={errors.codigoPostal ? "error" : ""}
+                          className={errors.codigoPostal ? 'error' : ''}
                         />
-                        {errors.codigoPostal && (
-                          <span className="error-message">
-                            {errors.codigoPostal}
-                          </span>
-                        )}
+                        {errors.codigoPostal && <span className="error-message">{errors.codigoPostal}</span>}
                       </div>
                     </div>
                   </div>
-
+                  
+                 
                   <div className="form-group">
                     <label htmlFor="notasAdicionales">Notas Adicionales</label>
                     <textarea
@@ -489,22 +473,18 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                       placeholder="Instrucciones especiales para la entrega, etc."
                     ></textarea>
                   </div>
-
+                  
                   <div className="form-actions">
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      onClick={prevStep}
-                    >
+                    <button type="button" className="btn-secondary" onClick={prevStep}>
                       Volver
                     </button>
-                    <button
-                      type="submit"
-                      className="btn-primary"
+                    <button 
+                      type="submit" 
+                      className="btn-primary" 
                       disabled={isSubmitting}
                       onClick={handleSubmit}
                     >
-                      {isSubmitting ? "Procesando..." : "Realizar Pedido"}
+                      {isSubmitting ? 'Procesando...' : 'Realizar Pedido'}
                     </button>
                   </div>
                 </form>
