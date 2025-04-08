@@ -9,6 +9,7 @@ import QuotationPopup from "@/components/ContactPopUp/ContactPopUp";
 import { useCart } from "@/components/Cart/CartContext";
 import { formatProductForCart } from "@/components/Cart/addToCartHelper";
 import Footer from "@/components/Footer/Footer";
+import CartButton from "@/components/Cart/CartButton";
 
 interface SizeOption {
   size: string;
@@ -133,33 +134,42 @@ const Hex50Screen: React.FC = () => {
 
   return (
     <div className="product-container">
-      <header className="header">
-        <Link href="/">
-          <div className="logo">
+      <header>
+        <div className="container header-container">
+          <Link href="/" className="logo">
             <Image
-              height={100}
-              width={150}
               src="/images/blackLogo.jpeg"
-              alt="Xtreme Logo"
+              alt="CarpaPro logo"
+              width={150}
+              height={40}
             />
-          </div>
-        </Link>
-        <nav className="navigation">
-          <ul>
-            <li>
-              <Link href="#">Inicio</Link>
-            </li>
-            <li>
-              <Link href="#">Información</Link>
-            </li>
-            <li>
-              <Link href="#">Productos</Link>
-            </li>
-            <li>
-              <Link href="#">Contacto</Link>
-            </li>
-          </ul>
-        </nav>
+          </Link>
+          <nav>
+            <ul>
+              <li>
+                <Link href="/">Inicio</Link>
+              </li>
+              <li>
+                <Link href="/Hex40" scroll={false}>
+                  Hex 40
+                </Link>
+              </li>
+              <li>
+                <Link href="#" scroll={false}>
+                  Hex 50
+                </Link>
+              </li>
+              <li>
+                <Link href="/comparador" scroll={false}>
+                  Comparador
+                </Link>
+              </li>
+              <li>
+                <CartButton />
+              </li>
+            </ul>
+          </nav>
+        </div>
       </header>
 
       <div className="breadcrumb">
