@@ -148,7 +148,7 @@ const Contact: React.FC = () => {
             <Badge>Contacto</Badge>
           </div>
           <div className="contact-title-container">
-            <h2 className="contact-title">¿Cómo podemos ayudarte?</h2>
+            <h2 className="feature-title2">¿Cómo podemos ayudarte?</h2>
             <p className="contact-subtitle">
               Estamos disponibles para responder tus preguntas y atender tus
               pedidos.

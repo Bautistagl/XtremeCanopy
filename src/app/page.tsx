@@ -9,124 +9,88 @@ import Link from 'next/link';
 import { Feature } from "@/components/Feature/Feature";
 import { AboutUs } from "@/components/AboutUs/AboutUs";
 import { Contact } from "@/components/Contact/Contact";
-import InteractiveBentoGallery from "@/components/Gallery/Gallery";
 import CartButton from "@/components/Cart/CartButton";
 import Footer from "@/components/Footer/Footer";
+import MainHeroSection from "@/components/Hero/MainHero";
+import ProductsGrid, { Product } from "@/components/Gallery/Gallery";
+import Header from "@/components/Header/Header";
 
-const mediaItems = [
+const mockProducts: Product[] = [
   {
-    id: 1,
-    type: "image",
-    title: "HEX 50",
-    desc: "Driven, innovative, visionary",
-    url: "/images/picLand.jpg",
-    span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2",
+    id: "1",
+    name: "Hex 40",
+    imageUrl: "/images/picLand.jpg",
+    price: 29.99,
+    slug: "product-one",
+    subtitle: "3x3 Verde",
   },
   {
-    id: 2,
-    type: "image",
-    title: "HEX 50",
-    desc: "Adorable loyal companion.",
-    url: "/images/picLand3.JPG",
-    span: "md:col-span-2 md:row-span-2 col-span-1 sm:col-span-2 sm:row-span-2",
+    id: "2",
+    name: "Hex 40",
+    imageUrl: "/images/picLand2.jpg",
+    price: 39.99,
+    slug: "product-two",
+    subtitle: "3x3 Naranja",
   },
   {
-    id: 3,
-    type: "image",
-    title: "HEX 40",
-    desc: "Mystical forest trail",
-    url: "/images/picLand2.jpg",
-    span: "md:col-span-1 md:row-span-3 sm:col-span-2 sm:row-span-2 ",
+    id: "3",
+    name: "Hex 50",
+    imageUrl: "/images/picLand3.jpg",
+    price: 49.99,
+    slug: "product-three",
+    subtitle: "3x4.5 Azul",
   },
   {
-    id: 4,
-    type: "image",
-    title: "HEX 50",
-    desc: "Autumn scenery",
-    url: "/images/picLand4.JPG",
-    span: "md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2 ",
+    id: "4",
+    name: "Hex 50",
+    imageUrl: "/images/picLand4.jpg",
+    price: 59.99,
+    slug: "product-four",
+    subtitle: "3x4.5 Azul",
   },
   {
-    id: 5,
-    type: "image",
-    title: "HEX 40",
-    desc: "Vibrant feathered charm",
-    url: "/images/picLand5.JPG",
-    span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2 ",
+    id: "5",
+    name: "Hex 40",
+    imageUrl: "/images/gaze6.jpg",
+    price: 69.99,
+    slug: "product-five",
+    subtitle: "Hexagonal Blanco",
   },
   {
-    id: 6,
-    type: "image",
-    title: "HEX 50",
-    desc: "Sunny tropical beach",
-    url: "/images/picLand6.JPG",
-    span: "md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2 ",
-  },
-  {
-    id: 7,
-    type: "image",
-    title: "HEX 40",
-    desc: "Peaceful Shiva sanctuary.",
-    url: "/images/picLand3.JPG",
-    span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2 ",
+    id: "6",
+    name: "Hex 40",
+    imageUrl: "/images/gaze2.jpg",
+    price: 79.99,
+    slug: "product-six",
+    subtitle: "Hexagonal Negro",
   },
 ];
 
 export default function Home() {
   return (
     <div>
-      <header>
-        <div className="container header-container">
-          <Link href="/" className="logo">
-            <Image
-              src="/images/blackLogo.jpeg"
-              alt="CarpaPro logo"
-              width={150}
-              height={40}
-            />
-          </Link>
-          <nav>
-            <ul>
-              <li>
-                <Link href="/">Inicio</Link>
-              </li>
-              <li>
-                <Link href="/Hex40" scroll={false}>
-                  Hex 40
-                </Link>
-              </li>
-              <li>
-                <Link href="/Hex50" scroll={false}>
-                  Hex 50
-                </Link>
-              </li>
-              <li>
-                <Link href="/comparador" scroll={false}>
-                  Comparador
-                </Link>
-              </li>
-              <li>
-                <CartButton />
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       <main>
-        <HeroSection
-          title="Gazebos Portátiles Premium"
-          subtitle="Soluciones versátiles para exteriores que combinan funcionalidad y estilo."
-          ctaText="Ver mas variedades"
-          ctaAction={() => console.log("CTA Clicked")}
-        />
+        <div className="background-gradient">
+          <MainHeroSection
+            title="Gazebos Portátiles Premium"
+            subtitle="Soluciones versátiles para exteriores que combinan funcionalidad y estilo."
+            catalogButtonText="Hex 40"
+            contactButtonText="Hex 50"
+            catalogLink="/catalogo"
+            contactLink="/contacto"
+          />
+          <HeroSection
+            title="Gazebos Portátiles Premium"
+            subtitle="Soluciones versátiles para exteriores que combinan funcionalidad y estilo."
+            ctaText="Ver mas variedades"
+            ctaAction={() => console.log("CTA Clicked")}
+          />
+        </div>
 
         <Feature />
-        <InteractiveBentoGallery
-          mediaItems={mediaItems}
-          title=""
-          description=""
-        />
+        <ProductsGrid title="Nuestros Productos" products={mockProducts} />
         <AboutUs />
         <Contact />
       </main>

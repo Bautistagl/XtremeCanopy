@@ -6,9 +6,8 @@ export default function ComparadorPage() {
 
    
   return (
-    <div>
-        <ComparadorGazebos/>
+    <div className="container-comparador">
+      <ComparadorGazebos />
     </div>
-
-  )
+  );
 }

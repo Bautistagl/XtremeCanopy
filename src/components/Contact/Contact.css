@@ -111,20 +111,17 @@
 .contact-item-text {
   font-size: 16px;
   line-height: 1.5;
-  color: #4b5563;
+  color: #7e7e7e !important;
   margin: 0;
 }
 
 .contact-item-text a {
-  color: #3b82f6;
+  color: #7e7e7e !important;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-.contact-item-text a:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
+
 
 /* Social links */
 .contact-social {
@@ -142,13 +139,13 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #4b5563;
+  color: #7e7e7e !important;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .social-link:hover {
-  color: #3b82f6;
+  color: #3b82f6 !important;
 }
 
 /* Locations section */
@@ -202,7 +199,7 @@
 .contact-form-section {
   margin-top: 32px;
   padding: 48px;
-  background-color: #f9fafb;
+  background-color: #f4faff;
   border-radius: 8px;
 }
 
@@ -263,7 +260,7 @@
 
 .submit-button {
   padding: 12px 24px;
-  background-color: #3b82f6;
+  background-color: #0F7CA3;
   color: white;
   border: none;
   border-radius: 6px;
@@ -276,5 +273,5 @@
 }
 
 .submit-button:hover {
-  background-color: #2563eb;
+  background-color: #0f7ba3d5;
 }

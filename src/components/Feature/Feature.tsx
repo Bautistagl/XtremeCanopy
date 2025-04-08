@@ -49,7 +49,6 @@ const Feature: React.FC = () => {
               </div>
               <div className="feature-benefits">
                 <div className="feature-benefit-item">
-                  <CheckIcon />
                   <div className="feature-benefit-text">
                     <p>Maxima resistencia</p>
                     <p className="feature-benefit-description">
@@ -60,7 +59,6 @@ const Feature: React.FC = () => {
                   </div>
                 </div>
                 <div className="feature-benefit-item">
-                  <CheckIcon />
                   <div className="feature-benefit-text">
                     <p> Diseño optimizado</p>
                     <p className="feature-benefit-description">
@@ -71,7 +69,6 @@ const Feature: React.FC = () => {
                   </div>
                 </div>
                 <div className="feature-benefit-item">
-                  <CheckIcon />
                   <div className="feature-benefit-text">
                     <p>Ligereza y facilidad de transporte</p>
                     <p className="feature-benefit-description">

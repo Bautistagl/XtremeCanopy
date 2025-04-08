@@ -62,7 +62,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       description:
         "Ideal para uso ocasional o profesional, perfecto para ferias, eventos corporativos, reuniones al aire libre y más. Su peso optimizado y sistema de plegado facilitan el transporte y almacenamiento sin complicaciones",
       image: "/images/gaze.jpg",
-      tag: "HEX 40 3X4.5",
+      tag: "Mas vendido",
       link: "/Hex40",
     },
     {
@@ -88,23 +88,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <div className="hero-section-wrapper">
-      <header className="hero-section-header">
-        <h1 className="hero-section-title">{title}</h1>
-        <p className="hero-section-subtitle">{subtitle}</p>
-
-        <div className="hero-section-features">
-          {features.map((feature) => (
-            <Feature
-              key={feature.id}
-              icon={feature.icon}
-              text={feature.text}
-              isSelected={selectedFeature.id === feature.id}
-              onClick={() => handleFeatureClick(feature)}
-            />
-          ))}
-        </div>
-      </header>
-
       <main className="hero-section-content">
         <div className="hero-section-content-left">
           <div className="hero-section-tag">{selectedFeature.tag}</div>

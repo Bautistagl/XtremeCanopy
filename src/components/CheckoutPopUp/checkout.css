@@ -277,7 +277,7 @@
     width: auto;
   }
   
-  .btn-primary,
+  /* .btn-primary,
   .btn-secondary {
     padding: 12px 24px;
     border-radius: 4px;
@@ -295,9 +295,9 @@
   
   .btn-primary:hover {
     background-color: #3a7fd5;
-  }
+  } */
   
-  .btn-primary:disabled {
+  /* .btn-primary:disabled {
     background-color: #a0c4f3;
     cursor: not-allowed;
   }
@@ -309,7 +309,7 @@
   
   .btn-secondary:hover {
     background-color: #e8e8e8;
-  }
+  } */
   
   .form-actions {
     display: flex;

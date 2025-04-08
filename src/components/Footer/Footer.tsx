@@ -64,7 +64,8 @@ const Footer: React.FC = () => {
           <ul className="contact-info">
             <li>
               <i className="fa fa-map-marker"></i>
-              Dirección: Calle Principal #123, Ciudad
+              Dirección: Darwin Passaponti 6002, Moreno, Provincia de Buenos
+              Aires
             </li>
             <li>
               <Link
@@ -73,17 +74,19 @@ const Footer: React.FC = () => {
                 rel="noopener noreferrer"
               >
                 <i className="fa fa-phone"></i>
-                Teléfono: +34 9 2235 5847
+                Teléfono: +54 9 2374 10-3483
               </Link>
             </li>
             <li>
               <i className="fa fa-envelope"></i>
-              Email:{" "}
-              <Link href="mailto:contacto@xtreme.com">contacto@xtreme.com</Link>
+              Email: {"  "}
+              <Link href="mailto:contacto@xtreme.com">
+                xtremecanopy@gmail.com
+              </Link>
             </li>
             <li>
               <i className="fa fa-clock-o"></i>
-              Horario: Lun-Vie: 9:00-18:00
+              Horario: Lunes a viernes de 9am a 18pm
             </li>
           </ul>
         </div>

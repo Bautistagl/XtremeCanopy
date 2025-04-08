@@ -126,9 +126,11 @@
   }
   
   .contact-info a {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0px;
+    font-size: 14px;
     color: #cccccc;
-    text-decoration: none;
-    transition: color 0.3s ease;
   }
   
   .contact-info a:hover {

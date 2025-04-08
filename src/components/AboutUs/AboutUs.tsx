@@ -23,7 +23,7 @@ const AboutUs: React.FC = () => {
         {/* Header section */}
         <div className="about-us-header">
           <div className="about-us-title-container">
-            <h2 className="about-us-title">Sobre Nosotros</h2>
+            <h2 className="feature-title2">Sobre Nosotros</h2>
             <p className="about-us-subtitle">
               En Xtreme Canopy, diseñamos y fabricamos gazebos de alta calidad
               para quienes buscan resistencia, funcionalidad y estilo. Nos
@@ -37,6 +37,7 @@ const AboutUs: React.FC = () => {
 
         {/* Mission statement section */}
         <div className="about-us-mission">
+          <div className="mission-image"></div>
           <div className="mission-content">
             <h3 className="mission-title">Nuestra Mision</h3>
             <p className="mission-text">
@@ -47,7 +48,6 @@ const AboutUs: React.FC = () => {
               y presencia de marca.
             </p>
           </div>
-          <div className="mission-image"></div>
         </div>
       </div>
     </div>

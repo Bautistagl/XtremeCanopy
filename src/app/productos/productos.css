@@ -90,12 +90,7 @@
 }
 
 /* Product Image */
-.product-image {
-  position: relative;
-  padding-top: 15%; /* 4:3 Aspect Ratio */
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  overflow: hidden;
-}
+
 
 .image-placeholder {
   position: absolute;
@@ -196,7 +191,7 @@
   gap: 0.75rem;
 }
 
-.btn-primary,
+/* .btn-primary,
 .btn-secondary, .remove-btn, .quantity-btn {
   flex: 1;
   padding: 0.75rem 1rem;
@@ -222,7 +217,7 @@
 .btn-primary:hover {
   background: #2a75e8;
   transform: translateY(-2px);
-}
+} */
 .remove-btn {
   background-color: #fd3030;
   color: white;

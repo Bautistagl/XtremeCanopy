@@ -5,6 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import "../../app/Hex40/Detalle.css"
+import CartButton from "../Cart/CartButton";
+import Header from "../Header/Header";
 
 interface ModeloGazebo {
   id: string;
@@ -31,62 +33,66 @@ interface ModeloGazebo {
 }
 
 const ComparadorGazebos: React.FC = () => {
-  const [modelosSeleccionados, setModelosSeleccionados] = useState<string[]>(['hex40', 'hex60']);
+  const [modelosSeleccionados, setModelosSeleccionados] = useState<string[]>([
+    "hex40",
+    "hex60",
+  ]);
 
   const modelos: ModeloGazebo[] = [
-
     {
-      id: 'hex40',
-      nombre: 'HEX 40',
-      categoria: 'Ligera y básica',
-      tamanos: ['3x3', '3x4.5', '3x6', 'Hexagonal'],
-      perfilPies: '45 x 2 mm ',
-      techo: 'Poliéster 100% impermeable, recubierta de PVC',
-      tratamiento: 'Aluminio gama media',
-      piezasUnion: 'Nylon alta densidad',
+      id: "hex40",
+      nombre: "HEX 40",
+      categoria: "Ligera y básica",
+      tamanos: ["3x3", "3x4.5", "3x6", "Hexagonal"],
+      perfilPies: "45 x 2 mm ",
+      techo: "Poliéster 100% impermeable, recubierta de PVC",
+      tratamiento: "Aluminio gama media",
+      piezasUnion: "Nylon alta densidad",
       peso: [23, 29, 41, 79],
-      medidasDisponibles: ['3x3', '3x4.5', '3x6', 'Hexagonal'],
+      medidasDisponibles: ["3x3", "3x4.5", "3x6", "Hexagonal"],
       resistencia: 3,
-      ajuste: 'Sistema de botón para regular la altura',
+      ajuste: "Sistema de botón para regular la altura",
       lonaPVC: true,
-      colores: ['blanco', 'negro', 'rojo', 'azul', 'amarillo', 'verde'],
+      colores: ["blanco", "negro", "rojo", "azul", "amarillo", "verde"],
       aperturaCierre: 30,
-      usoRecomendado: 'Uso esporádico no profesional',
+      usoRecomendado: "Uso esporádico no profesional",
       usoModular: true,
-      panelesLaterales: 'Paredes: 2, 3 y 4 m',
+      panelesLaterales: "Paredes: 2, 3 y 4 m",
       confeccion: true,
       garantia: true,
       envioGratis: true,
-
     },
     {
-      id: 'light',
-      nombre: 'HEX 50',
-      categoria: 'Resistente',
-      tamanos: ['3x3', '3x4.5', '3x6'],
-      perfilPies: '58 x 2 mm',
-      techo: 'Poliéster 100% impermeable, recubierta de PVC',
-      tratamiento: 'Aluminio de gama alta',
-      piezasUnion: 'Nylon alta densidad, reforzadas con piezas de extrusión de aluminio',
+      id: "light",
+      nombre: "HEX 50",
+      categoria: "Resistente",
+      tamanos: ["3x3", "3x4.5", "3x6"],
+      perfilPies: "58 x 2 mm",
+      techo: "Poliéster 100% impermeable, recubierta de PVC",
+      tratamiento: "Aluminio de gama alta",
+      piezasUnion:
+        "Nylon alta densidad, reforzadas con piezas de extrusión de aluminio",
       peso: [32, 45, 62],
-      medidasDisponibles: ['3x3', '3x4.5', '3x6'],
+      medidasDisponibles: ["3x3", "3x4.5", "3x6"],
       resistencia: 5,
-      ajuste: 'Sistema de anillo para regular altura ',
+      ajuste: "Sistema de anillo para regular altura ",
       lonaPVC: true,
-      colores: ['blanco', 'negro', 'rojo', 'azul', 'amarillo', 'verde'],
+      colores: ["blanco", "negro", "rojo", "azul", "amarillo", "verde"],
       aperturaCierre: 30,
-      usoRecomendado: 'Uso ocasional o profesional',
+      usoRecomendado: "Uso ocasional o profesional",
       usoModular: true,
-      panelesLaterales: 'Paredes: 2, 3 y 4 m',
+      panelesLaterales: "Paredes: 2, 3 y 4 m",
       confeccion: true,
       garantia: true,
       envioGratis: true,
-    }
+    },
   ];
 
   const toggleModeloSeleccionado = (id: string) => {
     if (modelosSeleccionados.includes(id)) {
-      setModelosSeleccionados(modelosSeleccionados.filter(modelo => modelo !== id));
+      setModelosSeleccionados(
+        modelosSeleccionados.filter((modelo) => modelo !== id)
+      );
     } else {
       setModelosSeleccionados([...modelosSeleccionados, id]);
     }
@@ -97,9 +103,11 @@ const ComparadorGazebos: React.FC = () => {
     return (
       <div className={styles.resistenciaContainer}>
         {Array.from({ length: maxEstrellas }).map((_, index) => (
-          <span 
-            key={index} 
-            className={`${styles.estrella} ${index < nivel ? styles.estrellaActiva : ''}`}
+          <span
+            key={index}
+            className={`${styles.estrella} ${
+              index < nivel ? styles.estrellaActiva : ""
+            }`}
           >
             ★
           </span>
@@ -113,9 +121,11 @@ const ComparadorGazebos: React.FC = () => {
     return (
       <div className={styles.popularidadContainer}>
         {Array.from({ length: maxPuntos }).map((_, index) => (
-          <span 
-            key={index} 
-            className={`${styles.punto} ${index < nivel ? styles.puntoActivo : ''}`}
+          <span
+            key={index}
+            className={`${styles.punto} ${
+              index < nivel ? styles.puntoActivo : ""
+            }`}
           >
             •
           </span>
@@ -127,18 +137,26 @@ const ComparadorGazebos: React.FC = () => {
   const renderColores = (colores: string[]) => {
     return (
       <div className={styles.coloresContainer}>
-        {colores.map(color => (
-          <span 
-            key={color} 
+        {colores.map((color) => (
+          <span
+            key={color}
             className={styles.colorCirculo}
-            style={{ 
-              backgroundColor: color === 'blanco' ? '#FFFFFF' : 
-                              color === 'negro' ? '#000000' : 
-                              color === 'rojo' ? '#FF0000' : 
-                              color === 'azul' ? '#0088FF' : 
-                              color === 'amarillo' ? '#FFCC00' : 
-                              color === 'verde' ? '#00AA44' : '#CCCCCC',
-              border: color === 'blanco' ? '1px solid #DDDDDD' : 'none'
+            style={{
+              backgroundColor:
+                color === "blanco"
+                  ? "#FFFFFF"
+                  : color === "negro"
+                  ? "#000000"
+                  : color === "rojo"
+                  ? "#FF0000"
+                  : color === "azul"
+                  ? "#0088FF"
+                  : color === "amarillo"
+                  ? "#FFCC00"
+                  : color === "verde"
+                  ? "#00AA44"
+                  : "#CCCCCC",
+              border: color === "blanco" ? "1px solid #DDDDDD" : "none",
             }}
           ></span>
         ))}
@@ -148,34 +166,7 @@ const ComparadorGazebos: React.FC = () => {
 
   return (
     <div className={styles.comparadorContainer}>
-      <header className="header">
-        <Link href="/">
-          <div className="logo">
-            <Image
-              height={100}
-              width={150}
-              src="/images/blackLogo.jpeg"
-              alt="Xtreme Logo"
-            />
-          </div>
-        </Link>
-        <nav className="navigation">
-          <ul>
-            <li>
-              <Link href="/">Inicio</Link>
-            </li>
-            <li>
-              <Link href="#">Información</Link>
-            </li>
-            <li>
-              <Link href="#">Productos</Link>
-            </li>
-            <li>
-              <Link href="#">Contacto</Link>
-            </li>
-          </ul>
-        </nav>
-      </header>
+      <Header />
       <div className={styles.header}>
         <h1 className={styles.title}>COMPARADOR DE GAZEBOS PLEGABLES</h1>
         <p className={styles.subtitle}>
