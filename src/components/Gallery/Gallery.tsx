@@ -26,7 +26,7 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({ title, products }) => {
       <div className="products-grid">
         {displayProducts.map((product) => (
           <Link
-            href={`/product/${product.slug}`}
+            href={`/${product.slug}`}
             key={product.id}
             className="product-card"
           >
