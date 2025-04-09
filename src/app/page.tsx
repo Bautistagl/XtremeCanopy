@@ -21,7 +21,7 @@ const mockProducts: Product[] = [
     name: "Hex 40",
     imageUrl: "/images/picLand.jpg",
     price: 29.99,
-    slug: "product-one",
+    slug: "Hex40",
     subtitle: "3x3 Verde",
   },
   {
@@ -29,7 +29,7 @@ const mockProducts: Product[] = [
     name: "Hex 40",
     imageUrl: "/images/picLand2.jpg",
     price: 39.99,
-    slug: "product-two",
+    slug: "Hex40",
     subtitle: "3x3 Naranja",
   },
   {
@@ -37,7 +37,7 @@ const mockProducts: Product[] = [
     name: "Hex 50",
     imageUrl: "/images/picLand3.JPG",
     price: 49.99,
-    slug: "product-three",
+    slug: "Hex50",
     subtitle: "3x4.5 Azul",
   },
   {
@@ -45,7 +45,7 @@ const mockProducts: Product[] = [
     name: "Hex 50",
     imageUrl: "/images/picLand4.JPG",
     price: 59.99,
-    slug: "product-four",
+    slug: "Hex50",
     subtitle: "3x4.5 Azul",
   },
   {
@@ -53,7 +53,7 @@ const mockProducts: Product[] = [
     name: "Hex 40",
     imageUrl: "/images/gaze6.jpg",
     price: 69.99,
-    slug: "product-five",
+    slug: "Hex40",
     subtitle: "Hexagonal Blanco",
   },
   {
@@ -61,7 +61,7 @@ const mockProducts: Product[] = [
     name: "Hex 40",
     imageUrl: "/images/gaze2.jpg",
     price: 79.99,
-    slug: "product-six",
+    slug: "Hex40",
     subtitle: "Hexagonal Negro",
   },
 ];
