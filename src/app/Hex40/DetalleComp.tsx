@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/Cart/CartContext";
@@ -17,6 +17,7 @@ interface SizeOption {
   width: number;
   depth: number;
   weight: number;
+  weight2: number;
 }
 
 interface ColorOption {
@@ -24,28 +25,471 @@ interface ColorOption {
   value: string;
 }
 
+// Nuevas interfaces para tipar correctamente las imágenes
+interface ThumbnailImage {
+  src: string;
+  alt: string;
+}
+
+interface ColorImages {
+  main: string;
+  thumbnails: ThumbnailImage[];
+}
+
+interface SizeImages {
+  [color: string]: ColorImages;
+}
+
+interface GazeboImages {
+  [size: string]: SizeImages;
+}
+
 const ProductDetail: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string>("3x3");
-  const [selectedColor, setSelectedColor] = useState<string>("negro");
-  const [mainImage, setMainImage] = useState<any>("/images/gaze.jpg");
+  const [selectedColor, setSelectedColor] = useState<string>("black");
+  const [mainImage, setMainImage] = useState<string>(
+    "/images/gazebos/3x3/black/main.jpg"
+  );
+  const [thumbnailImages, setThumbnailImages] = useState<
+    { src: string; alt: string }[]
+  >([]);
   const [quantity, setQuantity] = useState<number>(1);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("caracteristicas");
   const { addItem } = useCart();
 
-  const thumbnailImages = [
-    { src: "/images/gaze.jpg", alt: "Gazebo vista frontal" },
-    { src: "/images/3x3.png", alt: "Gazebo vista 3x3" },
-    { src: "/images/3x4.5.png", alt: "Gazebo vista 3x4.5" },
-    { src: "/images/3x6.png", alt: "Gazebo vista 3x6" },
-    { src: "/images/hexagonal.png", alt: "Gazebo vista hexagonal" },
-  ];
+  // Definición de imágenes por tamaño y color
+  const imagesBySize: GazeboImages = {
+    "3x3": {
+      black: {
+        main: "/images/medidas/3x3Negro.png",
+        thumbnails: [
+          {
+            src: "/images/3x3tmbNegro.jpeg",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/medidas/3x3Negro.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/3x3Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      white: {
+        main: "/images/medidas/3x3Blanco.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x3Blanco.png",
+            alt: "Gazebo 3x3 Blanco - Vista 1",
+          },
+          {
+            src: "/images/info/3x3Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      red: {
+        main: "/images/medidas/3x3Rojo.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x3Rojo.png",
+            alt: "Gazebo 3x3 Rojo - Vista 1",
+          },
+          {
+            src: "/images/info/3x3Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      blue: {
+        main: "/images/medidas/3x3Azul.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x3Azul.png",
+            alt: "Gazebo 3x3 Azul - Vista 1",
+          },
+          {
+            src: "/images/info/3x3Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      "rgb(255, 110, 0)": {
+        main: "/images/medidas/3x3Naranja.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x3Naranja.png",
+            alt: "Gazebo 3x3 Naranja - Vista 1",
+          },
+          {
+            src: "/images/info/3x3Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      green: {
+        main: "/images/medidas/3x3Verde.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x3Verde.png",
+            alt: "Gazebo 3x3 Verde - Vista 1",
+          },
+          {
+            src: "/images/info/3x3Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+    },
+    "3x4.5": {
+      black: {
+        main: "/images/medidas/3x4.5Negro.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x4.5Negro.png",
+            alt: "Gazebo 3x4.5 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/3x4.5Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      white: {
+        main: "/images/medidas/3x4.5Blanco.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x4.5Blanco.png",
+            alt: "Gazebo 3x4.5 Blanco - Vista 1",
+          },
+          {
+            src: "/images/info/3x4.5Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      red: {
+        main: "/images/medidas/3x4.5Rojo.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x4.5Rojo.png",
+            alt: "Gazebo 3x4.5 Rojo - Vista 1",
+          },
+          {
+            src: "/images/info/3x4.5Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      blue: {
+        main: "/images/medidas/3x4.5Azul.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x4.5Azul.png",
+            alt: "Gazebo 3x4.5 Azul - Vista 1",
+          },
+          {
+            src: "/images/info/3x4.5Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      "rgb(255, 110, 0)": {
+        main: "/images/medidas/3x4.5Naranja.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x4.5Naranja.png",
+            alt: "Gazebo 3x4.5 Naranja - Vista 1",
+          },
+          {
+            src: "/images/info/3x4.5Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      green: {
+        main: "/images/medidas/3x4.5Verde.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x4.5Verde.png",
+            alt: "Gazebo 3x4.5 Verde - Vista 1",
+          },
+          {
+            src: "/images/info/3x4.5Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+    },
+    "3x6": {
+      black: {
+        main: "/images/medidas/3x6Negro.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x6Negro.png",
+            alt: "Gazebo 3x6 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/3x6Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      white: {
+        main: "/images/medidas/3x6Blanco.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x6Blanco.png",
+            alt: "Gazebo 3x6 Blanco - Vista 1",
+          },
+          {
+            src: "/images/info/3x6Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      red: {
+        main: "/images/medidas/3x6Rojo.png",
+        thumbnails: [
+          {
+            src: "/images/gaze.jpg",
+            alt: "Gazebo 3x6 Rojo - Vista 1",
+          },
+          {
+            src: "/images/3x6tmbRojo.JPG",
+            alt: "Gazebo 3x6 Rojo - Vista 1",
+          },
+          {
+            src: "/images/medidas/3x6Rojo.png",
+            alt: "Gazebo 3x6 Rojo - Vista 1",
+          },
+          {
+            src: "/images/info/3x6Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      blue: {
+        main: "/images/medidas/3x6Azul.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x6Azul.png",
+            alt: "Gazebo 3x6 Azul - Vista 1",
+          },
+          {
+            src: "/images/info/3x6Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      "rgb(255, 110, 0)": {
+        main: "/images/medidas/3x6Naranja.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x6Naranja.png",
+            alt: "Gazebo 3x6 Naranja - Vista 1",
+          },
+          {
+            src: "/images/info/3x6Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      green: {
+        main: "/images/medidas/3x6Verde.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/3x6Verde.png",
+            alt: "Gazebo 3x6 Verde - Vista 1",
+          },
+          {
+            src: "/images/info/3x6Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+          {
+            src: "/images/info/Hex40Info.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+    },
+    Hexagonal: {
+      black: {
+        main: "/images/medidas/HexaNegro.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/HexaNegro.png",
+            alt: "Gazebo Hexagonal Azul - Vista 1",
+          },
+          {
+            src: "/images/info/HexaInfo.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      white: {
+        main: "/images/medidas/HexaBlanca.jpg",
+        thumbnails: [
+          {
+            src: "/images/HexatmbBlanca.jpeg",
+            alt: "Gazebo Hexagonal Blanco - Vista 1",
+          },
+          {
+            src: "/images/medidas/HexaBlanca.jpg",
+            alt: "Gazebo Hexagonal Azul - Vista 1",
+          },
+          {
+            src: "/images/info/HexaInfo.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      // Agregar aquí el resto de colores para Hexagonal...
+      red: {
+        main: "/images/medidas/3x6Rojo.png",
+        thumbnails: [
+          // {
+          //   src: "/images/medidas/gazebos/hexagonal/red/1.jpg",
+          //   alt: "Gazebo Hexagonal Rojo - Vista 1",
+          // },
+          {
+            src: "/images/info/HexaInfo.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      blue: {
+        main: "/images/medidas/HexaAzul.png",
+        thumbnails: [
+          {
+            src: "/images/medidas/HexaAzul.png",
+            alt: "Gazebo Hexagonal Azul - Vista 1",
+          },
+          {
+            src: "/images/info/HexaInfo.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      "rgb(255, 110, 0)": {
+        main: "/images/medidas/3x6Naranja.png",
+        thumbnails: [
+          // {
+          //   src: "/images/medidas/gazebos/hexagonal/orange/1.jpg",
+          //   alt: "Gazebo Hexagonal Naranja - Vista 1",
+          // },
+          {
+            src: "/images/info/HexaInfo.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+      green: {
+        main: "/images/medidas/3x6Verde.png",
+        thumbnails: [
+          // {
+          //   src: "/images/medidas/gazebos/hexagonal/green/1.jpg",
+          //   alt: "Gazebo Hexagonal Verde - Vista 1",
+          // },
+          {
+            src: "/images/info/HexaInfo.png",
+            alt: "Gazebo 3x3 Negro - Vista 1",
+          },
+        ],
+      },
+    },
+  };
 
   const sizes: SizeOption[] = [
-    { size: "3x3", height: 160, width: 24, depth: 24, weight: 23 },
-    { size: "3x4.5", height: 160, width: 33, depth: 24, weight: 29 },
-    { size: "3x6", height: 160, width: 43, depth: 25, weight: 41 },
-    { size: "Hexagonal", height: 162, width: 55, depth: 45, weight: 79 },
+    { size: "3x3", height: 160, width: 24, depth: 24, weight: 23, weight2: 43 },
+    {
+      size: "3x4.5",
+      height: 160,
+      width: 33,
+      depth: 24,
+      weight: 29,
+      weight2: 55,
+    },
+    { size: "3x6", height: 160, width: 43, depth: 25, weight: 41, weight2: 73 },
+    {
+      size: "Hexagonal",
+      height: 162,
+      width: 55,
+      depth: 45,
+      weight: 79,
+      weight2: 112,
+    },
   ];
 
   const colors: ColorOption[] = [
@@ -53,19 +497,39 @@ const ProductDetail: React.FC = () => {
     { name: "Blanco", value: "white" },
     { name: "Rojo", value: "red" },
     { name: "Azul", value: "blue" },
-    { name: "Naranja", value: "orange" },
+    { name: "Naranja", value: "rgb(255, 110, 0)" },
     { name: "Verde", value: "green" },
   ];
 
+  // Función para actualizar las imágenes según tamaño y color
+  const updateImages = () => {
+    // Verificamos que el tamaño seleccionado exista en nuestro objeto
+    if (selectedSize in imagesBySize) {
+      const sizeImages = imagesBySize[selectedSize];
+      // Verificamos que el color seleccionado exista para ese tamaño
+      if (selectedColor in sizeImages) {
+        setMainImage(sizeImages[selectedColor].main);
+        setThumbnailImages(sizeImages[selectedColor].thumbnails);
+      }
+    }
+  };
+
+  // Actualizar imágenes cuando cambia el tamaño o color
+  useEffect(() => {
+    updateImages();
+  }, [selectedSize, selectedColor]);
+
   const handleSizeChange = (size: string) => {
     setSelectedSize(size);
+    // Las imágenes se actualizarán en el useEffect
   };
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
+    // Las imágenes se actualizarán en el useEffect
   };
 
-  const handleThumbnailClick = (image: any) => {
+  const handleThumbnailClick = (image: string) => {
     setMainImage(image);
   };
 
@@ -73,20 +537,8 @@ const ProductDetail: React.FC = () => {
     const selectedColorName =
       colors.find((c) => c.value === selectedColor)?.name || selectedColor;
 
-    let sizeSpecificImage = "";
-    switch (selectedSize) {
-      case "3x3":
-        sizeSpecificImage = "/images/3x3tmb.png";
-        break;
-      case "3x4.5":
-        sizeSpecificImage = "/images/3x4.5tmb.png";
-        break;
-      case "3x6":
-        sizeSpecificImage = "/images/3x6tmb.png";
-        break;
-      case "Hexagonal":
-        sizeSpecificImage = "/images/hexatmb.png";
-    }
+    // Usar la imagen principal actual para el carrito
+    const productImage = mainImage;
 
     const productToAdd = formatProductForCart(
       "Gazebo Aluminio HEX 40",
@@ -94,7 +546,7 @@ const ProductDetail: React.FC = () => {
       quantity,
       selectedSize,
       selectedColorName,
-      sizeSpecificImage
+      productImage
     );
 
     addItem(productToAdd);
@@ -114,6 +566,8 @@ const ProductDetail: React.FC = () => {
         return 32000;
       case "3x6":
         return 39000;
+      case "Hexagonal":
+        return 45000;
       default:
         return 25000;
     }
@@ -131,12 +585,39 @@ const ProductDetail: React.FC = () => {
     setActiveTab(tab);
   };
 
+  // Generar miniaturas de colores disponibles para el tamaño seleccionado
+  const getColorThumbnails = () => {
+    const colorThumbnails: Array<{
+      color: string;
+      name: string;
+      image: string;
+    }> = [];
+
+    // Verificamos que el tamaño seleccionado exista en nuestro objeto
+    if (selectedSize in imagesBySize) {
+      const sizeImages = imagesBySize[selectedSize];
+
+      for (const color of colors) {
+        // Verificamos que el color exista para ese tamaño
+        if (color.value in sizeImages) {
+          colorThumbnails.push({
+            color: color.value,
+            name: color.name,
+            image: sizeImages[color.value].main,
+          });
+        }
+      }
+    }
+
+    return colorThumbnails;
+  };
+
   return (
     <div className="product-container">
       <Header />
 
       <div className="breadcrumb">
-        <Link href="/">Inicio</Link> &gt; <span>Gazebo Aluminio HEX 40</span>
+        <Link href="/">Inicio</Link> &gt; <span>Gazebo Lite Series HEX 40</span>
       </div>
 
       <main className="product-detail">
@@ -146,7 +627,7 @@ const ProductDetail: React.FC = () => {
               height={400}
               width={400}
               src={mainImage}
-              alt="Gazebo Aluminio HEX 40"
+              alt={`Gazebo Aluminio HEX 40 ${selectedSize} ${selectedColor}`}
             />
           </div>
           <div className="thumbnail-gallery">
@@ -164,7 +645,7 @@ const ProductDetail: React.FC = () => {
 
         <div className="product-info">
           <div className="product-tag">Destacado</div>
-          <h1 className="product-title">Gazebo Aluminio HEX 40</h1>
+          <h1 className="product-title">Gazebo Lite Series HEX 40</h1>
           <div className="rating">
             <span className="stars">★★★★☆</span>
           </div>
@@ -175,7 +656,9 @@ const ProductDetail: React.FC = () => {
             optimizado y sistema de plegado, facilitan el transporte y
             almacenamiento sin complicaciones.
           </p>
-
+          <span className="product-detail2">
+            Todos los gazebos incluyen una funda para transportar.{" "}
+          </span>
           <div className="product-options">
             <div className="size-selector">
               <h3>Tamaños disponibles:</h3>
@@ -194,7 +677,7 @@ const ProductDetail: React.FC = () => {
               </div>
             </div>
 
-            <div className="color-selector">
+            {/* <div className="color-selector">
               <h3>Colores disponibles:</h3>
               <div className="color-options">
                 {colors.map((color) => (
@@ -207,6 +690,30 @@ const ProductDetail: React.FC = () => {
                     onClick={() => handleColorChange(color.value)}
                     title={color.name}
                   />
+                ))}
+              </div>
+            </div> */}
+
+            {/* Agregar vista previa de colores con miniaturas */}
+            <div className="color-preview">
+              <h3>Colores disponibles:</h3>
+              <div className="color-preview-gallery">
+                {getColorThumbnails().map((item, index) => (
+                  <div
+                    key={index}
+                    className={`color-preview-item ${
+                      selectedColor === item.color ? "active" : ""
+                    }`}
+                    onClick={() => handleColorChange(item.color)}
+                  >
+                    <Image
+                      height={60}
+                      width={60}
+                      src={item.image}
+                      alt={`Gazebo ${selectedSize} ${item.name}`}
+                    />
+                    <span>{item.name}</span>
+                  </div>
                 ))}
               </div>
             </div>
@@ -257,6 +764,7 @@ const ProductDetail: React.FC = () => {
       </main>
 
       <section id="product-specs" className="product-specs-tabs">
+        {/* El resto del componente se mantiene igual */}
         <div className="tabs-header">
           <button
             className={`tab-button ${
@@ -369,6 +877,14 @@ const ProductDetail: React.FC = () => {
 
           {activeTab === "especificaciones" && (
             <div>
+              <div className="material-info">
+                <p>
+                  <strong>
+                    Las dimensiones y los pesos corresponden al packaging de los
+                    gazebos.
+                  </strong>
+                </p>
+              </div>
               <div className="table-container">
                 <table className="specs-table">
                   <thead>
@@ -378,6 +894,7 @@ const ProductDetail: React.FC = () => {
                       <th>Ancho (cm)</th>
                       <th>Profundidad (cm)</th>
                       <th>Peso (kg)</th>
+                      <th>Peso con laterales(kg)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -393,6 +910,7 @@ const ProductDetail: React.FC = () => {
                         <td>{size.width}</td>
                         <td>{size.depth}</td>
                         <td>{size.weight}</td>
+                        <td>{size.weight2}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -408,14 +926,19 @@ const ProductDetail: React.FC = () => {
         </div>
       </section>
 
-      <section className="use-cases">
+      {/* <section className="use-cases">
         <h2>Ideal para uso en playa y carreras Dakar</h2>
         <div className="use-cases-grid">
           <div className="use-case-card">
             <div className="use-case-image">
               <Image
-                src="/images/gaze.jpg"
-                alt="Gazebo en playa"
+                src={
+                  selectedSize in imagesBySize &&
+                  selectedColor in imagesBySize[selectedSize]
+                    ? imagesBySize[selectedSize][selectedColor].main
+                    : "/images/gaze.jpg"
+                }
+                alt={`Gazebo ${selectedSize} ${selectedColor} en playa`}
                 width={400}
                 height={300}
               />
@@ -431,8 +954,16 @@ const ProductDetail: React.FC = () => {
           <div className="use-case-card">
             <div className="use-case-image">
               <Image
-                src="/images/gaze.jpg"
-                alt="Gazebo en carreras"
+                src={
+                  selectedSize in imagesBySize &&
+                  selectedColor in imagesBySize[selectedSize] &&
+                  imagesBySize[selectedSize][selectedColor].thumbnails.length >
+                    0
+                    ? imagesBySize[selectedSize][selectedColor].thumbnails[0]
+                        .src
+                    : "/images/gaze.jpg"
+                }
+                alt={`Gazebo ${selectedSize} ${selectedColor} en carreras`}
                 width={400}
                 height={300}
               />
@@ -446,7 +977,7 @@ const ProductDetail: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <Footer />
 

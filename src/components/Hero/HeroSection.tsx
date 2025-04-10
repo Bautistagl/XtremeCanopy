@@ -57,7 +57,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     {
       id: 1,
       text: "HEX 40",
-      title: "Gazebo Aluminio HEX 40",
+      title: "Gazebo Lite Series HEX 40",
       icon: "",
       description:
         "Ideal para uso ocasional o profesional, perfecto para ferias, eventos corporativos, reuniones al aire libre y más. Su peso optimizado y sistema de plegado facilitan el transporte y almacenamiento sin complicaciones",

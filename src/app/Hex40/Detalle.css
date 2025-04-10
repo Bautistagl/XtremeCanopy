@@ -197,7 +197,11 @@ img {
   color: #666;
   margin-bottom: 2rem;
 }
-
+.product-detail2{
+  margin-top: -30px;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
 .product-options {
   margin-bottom: 2rem;
 }
@@ -737,7 +741,92 @@ img {
   border-top: 1px solid #333;
   color: #777;
 }
+/* Agregar estos estilos a tu archivo Detalle.css */
 
+.color-preview {
+  margin-top: 20px;
+}
+
+.color-preview h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.color-preview-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.color-preview-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.color-preview-item:hover {
+  background-color: #f5f5f5;
+}
+
+.color-preview-item.active {
+  background-color: #e0e0e0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.color-preview-item img {
+  border-radius: 4px;
+  object-fit: cover;
+  margin-bottom: 5px;
+}
+
+.color-preview-item span {
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Mejorar la galería de miniaturas */
+.thumbnail-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.thumbnail {
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.thumbnail.active {
+  border-color: #0074d9;
+}
+
+/* Estilos para la imagen principal */
+.main-image {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.main-image img {
+  transition: transform 0.3s ease;
+}
+
+.main-image:hover img {
+  transform: scale(1.02);
+}
 /* Responsive styles */
 @media (max-width: 768px) {
   .product-detail,

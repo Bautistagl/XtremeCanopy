@@ -51,10 +51,10 @@ const Footer: React.FC = () => {
           <h3>Productos</h3>
           <ul className="footer-links">
             <li>
-              <Link href="/Hex40">Gazebos Aluminio HEX 40</Link>
+              <Link href="/Hex40">Gazebo Lite Series HEX 40</Link>
             </li>
             <li>
-              <Link href="/Hex50">Gazebos Aluminio HEX 50</Link>
+              <Link href="/Hex50">Gazebo Pro Series HEX 50</Link>
             </li>
           </ul>
         </div>

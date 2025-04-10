@@ -14,6 +14,7 @@ import Footer from "@/components/Footer/Footer";
 import MainHeroSection from "@/components/Hero/MainHero";
 import ProductsGrid, { Product } from "@/components/Gallery/Gallery";
 import Header from "@/components/Header/Header";
+import GalleryComponent from "@/components/NewGallery/GalleryComp";
 
 const mockProducts: Product[] = [
   {
@@ -21,7 +22,7 @@ const mockProducts: Product[] = [
     name: "Hex 40",
     imageUrl: "/images/picLand.jpg",
     price: 29.99,
-    slug: "Hex40",
+    slug: "Hex50",
     subtitle: "3x3 Verde",
   },
   {
@@ -29,7 +30,7 @@ const mockProducts: Product[] = [
     name: "Hex 40",
     imageUrl: "/images/picLand2.jpg",
     price: 39.99,
-    slug: "Hex40",
+    slug: "Hex 50",
     subtitle: "3x3 Naranja",
   },
   {
@@ -65,6 +66,81 @@ const mockProducts: Product[] = [
     subtitle: "Hexagonal Negro",
   },
 ];
+const galleryItems = [
+  {
+    id: 1,
+    type: "image" as const,
+    url: "/images/detalles5.jpeg",
+    thumbnail: "/images/detalles5.jpeg",
+    title: "Gazebo Pro Series 3x3 Hex 50",
+    description: "",
+  },
+  {
+    id: 2,
+    type: "image" as const,
+    url: "/images/3x4.5tmbAzul.JPG",
+    thumbnail: "/images/3x4.5tmbAzul.JPG",
+    title: "Gazebo 3x4.5 Pro Series Hex 50 ",
+    description: "",
+  },
+  {
+    id: 3,
+    type: "video" as const,
+    url: "/videos/video_vertical_optimizado.mp4",
+    thumbnail: "/images/3x4.5tmbAzul.JPG",
+    title: "Interior 3x4.5 Hex 50",
+    description: "",
+  },
+  {
+    id: 4,
+    type: "image" as const,
+    url: "/images/fotoMision.jpg",
+    thumbnail: "/images/fotoMision.jpg",
+    title: "Gazebo Hexagonal Hex 40",
+    description: "",
+  },
+  {
+    id: 5,
+    type: "image" as const,
+    url: "/images/detalles4.jpg",
+    thumbnail: "/images/detalles4.jpg",
+    title: "Gazebo 3x6 Lite Series ",
+    description: "",
+  },
+  {
+    id: 7,
+    type: "image" as const,
+    url: "/images/3x6tmbBlanco.jpeg",
+    thumbnail: "/images/3x6tmbBlanco.jpeg",
+    title: "Gazebo 3x6 Lite Series ",
+    description: "",
+  },
+
+  {
+    id: 6,
+    type: "video" as const,
+    url: "/videos/detalles.mp4",
+    thumbnail: "/images/detalletmb.JPG",
+    title: "Detalles",
+    description: "",
+  },
+  {
+    id: 8,
+    type: "video" as const,
+    url: "/videos/detalles3.mp4",
+    thumbnail: "/images/detalles3tmb.JPG",
+    title: "Detalles",
+    description: "",
+  },
+  {
+    id: 9,
+    type: "video" as const,
+    url: "/videos/detalles2.mp4",
+    thumbnail: "/images/detalles2tmb.JPG",
+    title: "Detalles",
+    description: "",
+  },
+];
 
 export default function Home() {
   return (
@@ -84,7 +160,7 @@ export default function Home() {
           <HeroSection
             title="Gazebos Portátiles Premium"
             subtitle="Soluciones versátiles para exteriores que combinan funcionalidad y estilo."
-            ctaText="Ver mas variedades"
+            ctaText="Descubrir más modelos"
             ctaAction={() => console.log("CTA Clicked")}
           />
         </div>
@@ -92,6 +168,10 @@ export default function Home() {
         <Feature />
         <ProductsGrid title="Nuestros Productos" products={mockProducts} />
         <AboutUs />
+        <GalleryComponent
+          items={galleryItems}
+          subtitle="Muestra de algunos trabajos realizados"
+        />
         <Contact />
       </main>
 

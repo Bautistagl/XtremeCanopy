@@ -38,10 +38,10 @@ const Feature: React.FC = () => {
             <div className="feature-content">
               <div className="feature-header">
                 <div>
-                  <Badge>Calidad</Badge>
+                  <Badge>Uniones Reforzadas</Badge>
                 </div>
                 <div className="feature-title-container">
-                  <h2 className="feature-title">Uniones Reforzadas</h2>
+                  <h2 className="feature-title">Gazebo Pro Series HEX 50</h2>
                   <p className="feature-subtitle">
                     Con piezas de extrusión de aluminio.
                   </p>
