@@ -3,8 +3,37 @@ import "./globals.css";
 import { CartProvider } from "@/components/Cart/CartContext";
 
 export const metadata: Metadata = {
-  title: "Carpas plegables hexagonales resistentes BigFoot Ultra - CarpaPro®",
-  description: "Carpa plegable con estructura de pie hexagonal de 50 mm. Fabricada con componentes de alta calidad, perfecta para todo tipo de eventos y mercadillos.",
+  title: "Xtreme Canopy - Gazebos Premium",
+  description:
+    "Soluciones versátiles para exteriores que combinan funcionalidad y estilo.",
+
+  openGraph: {
+    title: "Xtreme Canopy - Gazebos Premium",
+    description:
+      "Soluciones versátiles para exteriores que combinan funcionalidad y estilo.",
+    images: [
+      {
+        url: "/whiteLogo.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Xtreme Canopy - Gazebos Premium",
+      },
+    ],
+    siteName: "Xtreme Canopy",
+    locale: "es_ES",
+    type: "website",
+  },
+
+  icons: {
+    icon: "/xtr-favi.ico",
+  },
+
+  // Metadatos adicionales
+  keywords:
+    "carpas plegables, carpas hexagonales, carpas para eventos, carpas profesionales, carpapro",
+  authors: [{ name: "Xtreme Canopy" }],
+  creator: "Xtreme Canopy",
+  publisher: "Xtreme Canopy",
 };
 
 export default function RootLayout({
@@ -15,9 +44,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
-        <CartProvider>
-        {children}
-        </CartProvider>
+        <CartProvider>{children}</CartProvider>
       </body>
     </html>
   );
