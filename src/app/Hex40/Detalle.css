@@ -641,11 +641,12 @@ img {
   margin-bottom: 0.8rem;
 }
 
-.product-price {
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: black;
-  margin-bottom: 1rem;
+.product-price h3 {
+
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: #444;
+  
 }
 .cart-price{
   font-weight: 600;

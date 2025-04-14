@@ -733,7 +733,7 @@ const ProductDetail: React.FC = () => {
             </div>
           </div>
           <div className="product-price">
-            <h2>Precio: U$D{currentPrice.toLocaleString()}</h2>
+            <h3>Precio: U$D{currentPrice.toLocaleString()}</h3>
           </div>
           <div className="quantity-selector">
             <h3>Cantidad:</h3>
