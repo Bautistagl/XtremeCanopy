@@ -7,6 +7,7 @@ import "./Header.css"; // Import your CSS file for styling
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Añade estado de carga
 
   // Check if window is defined (to avoid SSR issues)
   useEffect(() => {
@@ -19,16 +20,20 @@ const Header = () => {
 
     // Set initial value
     handleResize();
+    setIsLoading(false); // Marcar como cargado
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  // No mostrar nada mientras carga para evitar el parpadeo
+  if (isLoading) return null;
 
   return (
     <header className="header">

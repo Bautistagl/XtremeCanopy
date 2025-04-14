@@ -86,7 +86,7 @@ const Footer: React.FC = () => {
             </li>
             <li>
               <i className="fa fa-clock-o"></i>
-              Horario: Lunes a viernes de 9am a 18pm
+              Horario de Atención: Lunes a viernes de 9am a 18pm
             </li>
           </ul>
         </div>
