@@ -249,7 +249,7 @@
   border-radius: 6px;
   font-size: 16px;
   transition: border-color 0.2s ease;
-  font-family: inherit;
+
 }
 
 .form-group input:focus,

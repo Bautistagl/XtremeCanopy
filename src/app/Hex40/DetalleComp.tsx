@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -46,6 +47,7 @@ interface GazeboImages {
 
 const ProductDetail: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string>("3x3");
+
   const [selectedColor, setSelectedColor] = useState<string>("black");
   const [mainImage, setMainImage] = useState<string>(
     "/images/gazebos/3x3/black/main.jpg"
@@ -57,7 +59,9 @@ const ProductDetail: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("caracteristicas");
   const { addItem } = useCart();
-
+  useEffect(() => {
+    setCurrentPrice(getPriceBySize(selectedSize));
+  }, [selectedSize]);
   // Definición de imágenes por tamaño y color
   const imagesBySize: GazeboImages = {
     "3x3": {
@@ -550,26 +554,34 @@ const ProductDetail: React.FC = () => {
     );
 
     addItem(productToAdd);
-
-    alert(`Producto agregado al carrito:
-       - ${productToAdd.name}
-       - Tamaño: ${productToAdd.size}
-       - Color: ${productToAdd.color}
-       - Cantidad: ${productToAdd.quantity}`);
+    Swal.fire({
+      title: "Agregado con exito!",
+      html: `<br>
+       <strong>${productToAdd.name}</strong><br>
+       Tamaño: <strong>${productToAdd.size} </strong><br>
+       Color: <strong>${productToAdd.color}</strong><br>
+      -Cantidad:<strong>${productToAdd.quantity}</strong> `,
+      icon: "success",
+    });
+    // alert(`Producto agregado al carrito:
+    //    - ${productToAdd.name}
+    //    - Tamaño: ${productToAdd.size}
+    //    - Color: ${productToAdd.color}
+    //    - Cantidad: ${productToAdd.quantity}`);
   };
 
   const getPriceBySize = (size: string): number => {
     switch (size) {
       case "3x3":
-        return 25000;
+        return 100;
       case "3x4.5":
-        return 32000;
+        return 200;
       case "3x6":
-        return 39000;
+        return 300;
       case "Hexagonal":
-        return 45000;
+        return 400;
       default:
-        return 25000;
+        return 500;
     }
   };
 
@@ -611,7 +623,9 @@ const ProductDetail: React.FC = () => {
 
     return colorThumbnails;
   };
-
+  const [currentPrice, setCurrentPrice] = useState<number>(
+    getPriceBySize("3x3")
+  );
   return (
     <div className="product-container">
       <Header />
@@ -718,7 +732,9 @@ const ProductDetail: React.FC = () => {
               </div>
             </div>
           </div>
-
+          <div className="product-price">
+            <h2>Precio: U$D{currentPrice.toLocaleString()}</h2>
+          </div>
           <div className="quantity-selector">
             <h3>Cantidad:</h3>
             <div className="quantity-controls">
@@ -925,59 +941,6 @@ const ProductDetail: React.FC = () => {
           )}
         </div>
       </section>
-
-      {/* <section className="use-cases">
-        <h2>Ideal para uso en playa y carreras Dakar</h2>
-        <div className="use-cases-grid">
-          <div className="use-case-card">
-            <div className="use-case-image">
-              <Image
-                src={
-                  selectedSize in imagesBySize &&
-                  selectedColor in imagesBySize[selectedSize]
-                    ? imagesBySize[selectedSize][selectedColor].main
-                    : "/images/gaze.jpg"
-                }
-                alt={`Gazebo ${selectedSize} ${selectedColor} en playa`}
-                width={400}
-                height={300}
-              />
-            </div>
-            <div className="use-case-content">
-              <h3>Perfecto para días de playa</h3>
-              <p>
-                Protección UV e impermeable, ideal para disfrutar de la playa
-                con sombra y comodidad.
-              </p>
-            </div>
-          </div>
-          <div className="use-case-card">
-            <div className="use-case-image">
-              <Image
-                src={
-                  selectedSize in imagesBySize &&
-                  selectedColor in imagesBySize[selectedSize] &&
-                  imagesBySize[selectedSize][selectedColor].thumbnails.length >
-                    0
-                    ? imagesBySize[selectedSize][selectedColor].thumbnails[0]
-                        .src
-                    : "/images/gaze.jpg"
-                }
-                alt={`Gazebo ${selectedSize} ${selectedColor} en carreras`}
-                width={400}
-                height={300}
-              />
-            </div>
-            <div className="use-case-content">
-              <h3>Resistente para carreras Dakar</h3>
-              <p>
-                Estructura reforzada que soporta condiciones extremas, perfecto
-                para equipos de competición.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section> */}
 
       <Footer />
 

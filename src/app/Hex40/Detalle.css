@@ -644,10 +644,13 @@ img {
 .product-price {
   font-weight: 600;
   font-size: 1.2rem;
-  color: #333;
+  color: black;
   margin-bottom: 1rem;
 }
-
+.cart-price{
+  font-weight: 600;
+  font-size: 0.8rem;
+}
 .product-card-actions {
   display: flex;
   justify-content: center;

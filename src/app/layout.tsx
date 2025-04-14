@@ -13,7 +13,7 @@ export const metadata: Metadata = {
       "Soluciones versátiles para exteriores que combinan funcionalidad y estilo.",
     images: [
       {
-        url: "/whiteLogo.jpeg",
+        url: "/images/whiteLogo.jpeg",
         width: 1200,
         height: 630,
         alt: "Xtreme Canopy - Gazebos Premium",
@@ -25,10 +25,9 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/xtr-favi.ico",
+    icon: "/images/favicon.ico",
   },
 
-  // Metadatos adicionales
   keywords:
     "carpas plegables, carpas hexagonales, carpas para eventos, carpas profesionales, carpapro",
   authors: [{ name: "Xtreme Canopy" }],

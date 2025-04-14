@@ -35,7 +35,6 @@ const ColorCircle: React.FC<{ color: string }> = ({ color }) => {
       azul: "#0000FF",
       verde: "#008000",
       naranja: "#FFA500",
-
       // Puedes agregar más colores según necesites
     };
 
@@ -88,6 +87,15 @@ const CartButton: React.FC = () => {
 
   const handleCloseCheckout = () => {
     setIsCheckoutOpen(false);
+  };
+
+  // Formatea el precio en formato de moneda
+  const formatCurrency = (amount: number): string => {
+    return new Intl.NumberFormat("es-MX", {
+      style: "currency",
+      currency: "MXN",
+      minimumFractionDigits: 2,
+    }).format(amount);
   };
 
   // Imagen por defecto si no hay una específica
@@ -143,15 +151,23 @@ const CartButton: React.FC = () => {
                                 {item.color}
                               </>
                             )}
+                            <span className="cart-price"> U$D{item.price}</span>
                           </div>
                         )}
                       </div>
+
                       <div className="cart-quantity-control">
                         <button
                           className="cart-quantity-button"
                           onClick={() =>
-                            updateQuantity(item.id, item.quantity - 1)
+                            updateQuantity(
+                              item.id,
+                              item.quantity - 1,
+                              item.size,
+                              item.color
+                            )
                           }
+                          disabled={item.quantity <= 1}
                         >
                           -
                         </button>
@@ -159,20 +175,37 @@ const CartButton: React.FC = () => {
                         <button
                           className="cart-quantity-button"
                           onClick={() =>
-                            updateQuantity(item.id, item.quantity + 1)
+                            updateQuantity(
+                              item.id,
+                              item.quantity + 1,
+                              item.size,
+                              item.color
+                            )
                           }
                         >
                           +
                         </button>
                       </div>
+
                       <button
                         className="remove-button"
-                        onClick={() => removeItem(item.id)}
+                        onClick={() =>
+                          removeItem(item.id, item.size, item.color)
+                        }
+                        aria-label="Eliminar producto"
+                        title="Eliminar producto"
                       >
                         ×
                       </button>
                     </div>
                   ))}
+                </div>
+
+                <div className="cart-summary">
+                  <div className="cart-summary-row cart-total">
+                    <span>Total:</span>
+                    <span>{formatCurrency(totalPrice)}</span>
+                  </div>
                 </div>
 
                 <div className="cart-actions">
@@ -185,6 +218,7 @@ const CartButton: React.FC = () => {
                   <button
                     className="cart-action-button checkout-button"
                     onClick={handleOpenCheckout}
+                    disabled={items.length === 0}
                   >
                     Realizar Pedido
                   </button>

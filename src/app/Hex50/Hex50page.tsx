@@ -11,6 +11,7 @@ import Footer from "@/components/Footer/Footer";
 import CartButton from "@/components/Cart/CartButton";
 import "../Hex40/Detalle.css";
 import Header from "@/components/Header/Header";
+import Swal from "sweetalert2";
 interface SizeOption {
   size: string;
   height: number;
@@ -478,25 +479,29 @@ const Hex50Screen: React.FC = () => {
 
     addItem(productToAdd);
 
-    alert(`Producto agregado al carrito:
-       - ${productToAdd.name}
-       - Tamaño: ${productToAdd.size}
-       - Color: ${productToAdd.color}
-       - Cantidad: ${productToAdd.quantity}`);
+    Swal.fire({
+      title: "Agregado con exito!",
+      html: `<br>
+         <strong>${productToAdd.name}</strong><br>
+         Tamaño: <strong>${productToAdd.size} </strong><br>
+         Color: <strong>${productToAdd.color}</strong><br>
+        -Cantidad:<strong>${productToAdd.quantity}</strong> `,
+      icon: "success",
+    });
   };
 
   const getPriceBySize = (size: string): number => {
     switch (size) {
       case "3x3":
-        return 25000;
+        return 100;
       case "3x4.5":
-        return 32000;
+        return 200;
       case "3x6":
-        return 39000;
+        return 300;
       case "Hexagonal":
-        return 45000;
+        return 400;
       default:
-        return 25000;
+        return 100;
     }
   };
 

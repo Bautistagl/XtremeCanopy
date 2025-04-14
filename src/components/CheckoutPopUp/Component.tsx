@@ -70,139 +70,143 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
   onClose,
 }) => {
   const { items, totalItems, totalPrice, clearCart } = useCart();
-  
+
   const [formData, setFormData] = useState<FormData>({
-    nombre: '',
-    apellido: '',
-    email: '',
-    telefono: '',
-    direccion: '',
-    ciudad: '',
-    codigoPostal: '',
-    metodoPago: 'transferencia',
-    notasAdicionales: ''
+    nombre: "",
+    apellido: "",
+    email: "",
+    telefono: "",
+    direccion: "",
+    ciudad: "",
+    codigoPostal: "",
+    metodoPago: "transferencia",
+    notasAdicionales: "",
   });
-  
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState('');
+  const [submitError, setSubmitError] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
-  
+
   // Bloquear scroll cuando el popup está abierto
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
-    
+
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [isOpen]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Limpiar error cuando se edita el campo
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
 
   const validateForm = () => {
-    const newErrors: {[key: string]: string} = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     if (!formData.nombre.trim()) {
-      newErrors.nombre = 'Por favor ingrese su nombre';
+      newErrors.nombre = "Por favor ingrese su nombre";
     }
-    
+
     if (!formData.apellido.trim()) {
-      newErrors.apellido = 'Por favor ingrese su apellido';
+      newErrors.apellido = "Por favor ingrese su apellido";
     }
-    
+
     if (!formData.email.trim()) {
-      newErrors.email = 'Por favor ingrese su email';
+      newErrors.email = "Por favor ingrese su email";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Por favor ingrese un email válido';
+      newErrors.email = "Por favor ingrese un email válido";
     }
-    
+
     if (!formData.telefono.trim()) {
-      newErrors.telefono = 'Por favor ingrese su teléfono';
+      newErrors.telefono = "Por favor ingrese su teléfono";
     }
-    
+
     if (!formData.direccion.trim()) {
-      newErrors.direccion = 'Por favor ingrese su dirección';
+      newErrors.direccion = "Por favor ingrese su dirección";
     }
-    
+
     if (!formData.ciudad.trim()) {
-      newErrors.ciudad = 'Por favor ingrese su ciudad';
+      newErrors.ciudad = "Por favor ingrese su ciudad";
     }
-    
+
     if (!formData.codigoPostal.trim()) {
-      newErrors.codigoPostal = 'Por favor ingrese su código postal';
+      newErrors.codigoPostal = "Por favor ingrese su código postal";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       setIsSubmitting(true);
-      setSubmitError('');
-      
+      setSubmitError("");
+
       try {
         // Crear un objeto con todos los datos del pedido
         const orderData = {
           cliente: formData,
           items: items,
           totalItems: totalItems,
-          totalPrecio: totalPrice
+          totalPrecio: totalPrice,
         };
-        
+
         // Enviar la información al backend
-        const response = await fetch('/api/solicitar-coti', {
-          method: 'POST',
+        const response = await fetch("/api/solicitar-coti", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(orderData),
         });
-        
+
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || 'Error al procesar el pedido');
+          throw new Error(errorData.error || "Error al procesar el pedido");
         }
-        
+
         setSubmitSuccess(true);
-        
+
         // Limpiar el carrito después de un pedido exitoso
         clearCart();
-        
+
         // Resetear el formulario
         setFormData({
-          nombre: '',
-          apellido: '',
-          email: '',
-          telefono: '',
-          direccion: '',
-          ciudad: '',
-          codigoPostal: '',
-          metodoPago: 'transferencia',
-          notasAdicionales: ''
+          nombre: "",
+          apellido: "",
+          email: "",
+          telefono: "",
+          direccion: "",
+          ciudad: "",
+          codigoPostal: "",
+          metodoPago: "transferencia",
+          notasAdicionales: "",
         });
-        
+
         // Cerrar el popup después de un breve retraso
         setTimeout(() => {
           onClose();
@@ -210,8 +214,10 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
           setCurrentStep(1);
         }, 3000);
       } catch (error) {
-        console.error('Error al enviar el pedido:', error);
-        setSubmitError(error instanceof Error ? error.message : 'Error al procesar el pedido');
+        console.error("Error al enviar el pedido:", error);
+        setSubmitError(
+          error instanceof Error ? error.message : "Error al procesar el pedido"
+        );
       } finally {
         setIsSubmitting(false);
       }
@@ -231,12 +237,21 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
   };
 
   const formatPrice = (price: number) => {
-    return price.toLocaleString('es-CL', { 
-      style: 'currency', 
-      currency: 'CLP',
-      minimumFractionDigits: 0
+    return price.toLocaleString("es-CL", {
+      style: "currency",
+      currency: "CLP",
+      minimumFractionDigits: 0,
     });
   };
+
+  // Calcular el subtotal (precio base sin envío)
+  const subtotal = totalPrice;
+
+  // Envío (puedes ajustar esto según tus reglas de negocio)
+  const costoEnvio = 0; // Por ahora lo dejamos en 0, pero podrías calcularlo según la ubicación
+
+  // Total final (subtotal + envío)
+  const total = subtotal + costoEnvio;
 
   // Imagen por defecto si no hay una específica
   const defaultImage = "/images/product-placeholder.jpg";
@@ -314,14 +329,19 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                                 )}
                                 <span>Cantidad: {item.quantity}</span>
                               </div>
+                              <div className="item-price">
+                                {formatPrice(item.price)} x {item.quantity} ={" "}
+                                {formatPrice(item.price * item.quantity)}
+                              </div>
                             </div>
                           </div>
                         ))}
                       </div>
 
-                      <div className="cart-total">
-                        <div className="total-items">
-                          Productos: <span>{totalItems}</span>
+                      <div className="cart-summary">
+                        <div className="cart-summary-row cart-total">
+                          <span>Total:</span>
+                          <span>{formatPrice(total)}</span>
                         </div>
                       </div>
 
@@ -504,7 +524,9 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                       disabled={isSubmitting}
                       onClick={handleSubmit}
                     >
-                      {isSubmitting ? "Procesando..." : "Realizar Pedido"}
+                      {isSubmitting
+                        ? "Procesando..."
+                        : `Realizar Pedido (${formatPrice(total)})`}
                     </button>
                   </div>
                 </form>

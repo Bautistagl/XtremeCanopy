@@ -17,8 +17,13 @@ export interface CartItem {
 interface CartContextType {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
+  removeItem: (id: string, size?: string, color?: string) => void;
+  updateQuantity: (
+    id: string,
+    quantity: number,
+    size?: string,
+    color?: string
+  ) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -35,19 +40,22 @@ interface CartProviderProps {
 // Provider component
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
-  
+
   // Calcular totales
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
-  const totalPrice = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const totalPrice = items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   // Cargar carrito desde localStorage al iniciar
   useEffect(() => {
-    const storedCart = localStorage.getItem('cart');
+    const storedCart = localStorage.getItem("cart");
     if (storedCart) {
       try {
         setItems(JSON.parse(storedCart));
       } catch (error) {
-        console.error('Error al cargar el carrito desde localStorage:', error);
+        console.error("Error al cargar el carrito desde localStorage:", error);
         setItems([]);
       }
     }
@@ -55,17 +63,18 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // Guardar carrito en localStorage cuando cambia
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(items));
+    localStorage.setItem("cart", JSON.stringify(items));
   }, [items]);
 
   // Añadir item al carrito
   const addItem = (newItem: CartItem) => {
-    setItems(prevItems => {
+    setItems((prevItems) => {
       // Verificar si el producto ya existe en el carrito
       const existingItemIndex = prevItems.findIndex(
-        item => item.id === newItem.id && 
-                item.size === newItem.size && 
-                item.color === newItem.color
+        (item) =>
+          item.id === newItem.id &&
+          item.size === newItem.size &&
+          item.color === newItem.color
       );
 
       if (existingItemIndex > -1) {
@@ -80,21 +89,33 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     });
   };
 
-  // Eliminar item del carrito
-  const removeItem = (id: string) => {
-    setItems(prevItems => prevItems.filter(item => item.id !== id));
+  // Eliminar item del carrito - actualizado para considerar size y color
+  const removeItem = (id: string, size?: string, color?: string) => {
+    setItems((prevItems) =>
+      prevItems.filter(
+        (item) =>
+          !(item.id === id && item.size === size && item.color === color)
+      )
+    );
   };
 
-  // Actualizar cantidad de un item
-  const updateQuantity = (id: string, quantity: number) => {
+  // Actualizar cantidad de un item - actualizado para considerar size y color
+  const updateQuantity = (
+    id: string,
+    quantity: number,
+    size?: string,
+    color?: string
+  ) => {
     if (quantity <= 0) {
-      removeItem(id);
+      removeItem(id, size, color);
       return;
     }
 
-    setItems(prevItems => 
-      prevItems.map(item => 
-        item.id === id ? { ...item, quantity } : item
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id && item.size === size && item.color === color
+          ? { ...item, quantity }
+          : item
       )
     );
   };
@@ -112,13 +133,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     updateQuantity,
     clearCart,
     totalItems,
-    totalPrice
+    totalPrice,
   };
 
   return (
-    <CartContext.Provider value={contextValue}>
-      {children}
-    </CartContext.Provider>
+    <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
   );
 };
 
@@ -126,7 +145,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error('useCart debe usarse dentro de un CartProvider');
+    throw new Error("useCart debe usarse dentro de un CartProvider");
   }
   return context;
 };
+
+export default CartContext;
