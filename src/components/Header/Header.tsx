@@ -48,29 +48,53 @@ const Header = () => {
             />
           </Link>
           {isMobile && (
-            <button className="hamburger-button" onClick={toggleMenu} aria-label="Toggle menu">
-              <span className={`hamburger-icon ${isMenuOpen ? 'open' : ''}`}></span>
+            <button
+              className="hamburger-button"
+              onClick={toggleMenu}
+              aria-label="Toggle menu"
+            >
+              <span
+                className={`hamburger-icon ${isMenuOpen ? "open" : ""}`}
+              ></span>
             </button>
           )}
         </div>
 
-        <nav className={`nav-menu ${isMobile ? 'mobile' : ''} ${isMenuOpen ? 'open' : ''}`}>
+        <nav
+          className={`nav-menu ${isMobile ? "mobile" : ""} ${
+            isMenuOpen ? "open" : ""
+          }`}
+        >
           <ul>
             <li>
-              <Link href="/" onClick={() => isMobile && setIsMenuOpen(false)}>Inicio</Link>
-            </li>
-            <li>
-              <Link href="/Hex40" scroll={false} onClick={() => isMobile && setIsMenuOpen(false)}>
-                Hex 40
+              <Link href="/" onClick={() => isMobile && setIsMenuOpen(false)}>
+                Inicio
               </Link>
             </li>
             <li>
-              <Link href="/Hex50" scroll={false} onClick={() => isMobile && setIsMenuOpen(false)}>
-                Hex 50
+              <Link
+                href="/Hex40"
+                scroll={false}
+                onClick={() => isMobile && setIsMenuOpen(false)}
+              >
+                GAZEBO LITE SERIES HEX 40
               </Link>
             </li>
             <li>
-              <Link href="/comparador" scroll={false} onClick={() => isMobile && setIsMenuOpen(false)}>
+              <Link
+                href="/Hex50"
+                scroll={false}
+                onClick={() => isMobile && setIsMenuOpen(false)}
+              >
+                GAZEBO PRO SERIES HEX 50
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/comparador"
+                scroll={false}
+                onClick={() => isMobile && setIsMenuOpen(false)}
+              >
                 Comparador
               </Link>
             </li>

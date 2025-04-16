@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 
 // Definir el tipo para los productos del carrito
 export interface CartItem {
+  laterales?: string;
   id: string;
   name: string;
   size?: string;
@@ -11,6 +12,7 @@ export interface CartItem {
   quantity: number;
   price: number;
   image?: string;
+  sides?: string;
 }
 
 // Interface para el contexto del carrito

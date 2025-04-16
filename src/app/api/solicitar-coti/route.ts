@@ -10,6 +10,7 @@ interface CartItem {
   image?: string;
   size?: string;
   color?: string;
+  sides?: string;
 }
 
 interface ClientInfo {

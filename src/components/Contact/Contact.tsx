@@ -1,6 +1,7 @@
-import React from 'react';
-import './Contact.css';
+import React, { useState } from "react";
+import "./Contact.css";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 // Custom Badge component
 const Badge: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -121,7 +122,29 @@ interface Location {
   address: string;
 }
 
+// Form data interface
+interface FormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 const Contact: React.FC = () => {
+  // Form state
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    success?: boolean;
+    message?: string;
+  }>({});
+
   // Store the pickup and sales locations
   const locations: Location[] = [
     {
@@ -138,6 +161,70 @@ const Contact: React.FC = () => {
       address: "Av. Libertador 15767, San Isidro",
     },
   ];
+
+  // Form handlers
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus({});
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus({
+          success: true,
+          message: "Mensaje enviado correctamente. ¡Gracias por contactarnos!",
+        });
+        Swal.fire({
+          title: "Mensaje enviado correctamente!",
+          html: `<br>
+               <strong></strong><br> `,
+          icon: "success",
+        });
+        // Resetear el formulario después de un envío exitoso
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        setSubmitStatus({
+          success: false,
+          message:
+            data.error ||
+            "Error al enviar el mensaje. Por favor, inténtalo de nuevo.",
+        });
+      }
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+      setSubmitStatus({
+        success: false,
+        message: "Error al enviar el mensaje. Por favor, inténtalo de nuevo.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="contact-container">
@@ -165,7 +252,7 @@ const Contact: React.FC = () => {
             <div className="contact-item">
               <PhoneIcon />
               <div>
-                <h4 className="contact-item-title">Teléfono</h4>
+                <h4 className="contact-item-title">Whatsapp Business</h4>
                 <p className="contact-item-text">
                   <Link href="tel:+5492374103483">+54 9 2374 10-3483</Link>
                 </p>
@@ -242,7 +329,8 @@ const Contact: React.FC = () => {
         {/* Contact form section */}
         <div className="contact-form-section">
           <h3 className="contact-form-title">Envíanos un mensaje</h3>
-          <form className="contact-form">
+
+          <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="name">Nombre</label>
@@ -251,6 +339,9 @@ const Contact: React.FC = () => {
                   id="name"
                   name="name"
                   placeholder="Tu nombre"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -260,6 +351,9 @@ const Contact: React.FC = () => {
                   id="email"
                   name="email"
                   placeholder="Tu email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
                 />
               </div>
             </div>
@@ -267,9 +361,12 @@ const Contact: React.FC = () => {
               <label htmlFor="subject">Asunto</label>
               <input
                 type="text"
-                id="sub ject"
+                id="subject"
                 name="subject"
                 placeholder="Asunto del mensaje"
+                value={formData.subject}
+                onChange={handleChange}
+                required
               />
             </div>
             <div className="form-group">
@@ -279,10 +376,17 @@ const Contact: React.FC = () => {
                 name="message"
                 rows={5}
                 placeholder="Tu mensaje"
+                value={formData.message}
+                onChange={handleChange}
+                required
               ></textarea>
             </div>
-            <button type="submit" className="submit-button">
-              Enviar mensaje
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Enviando..." : "Enviar mensaje"}
             </button>
           </form>
         </div>

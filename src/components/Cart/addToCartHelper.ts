@@ -7,13 +7,7 @@ export const generateUniqueId = (productName: string, size?: string, color?: str
 
 // Función para formatear un producto para el carrito
 export const formatProductForCart = (
-  name: string,
-  price: number,
-  quantity: number,
-  size?: string,
-  color?: string,
-  image?: string
-): CartItem => {
+name: string, price: number, quantity: number, size?: string, color?: string, image?: string, laterales?: string): CartItem => {
   return {
     id: uuidv4(), 
     name,
@@ -21,7 +15,8 @@ export const formatProductForCart = (
     quantity,
     size,
     color,
-    image: image || "/images/product-placeholder.jpg" // Usa la imagen proporcionada o un placeholder
+    image: image || "/images/product-placeholder.jpg",
+    laterales
   };
 };
 

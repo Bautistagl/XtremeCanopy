@@ -8,6 +8,7 @@ interface QuotationPopupProps {
   productName: string;
   selectedSize?: string;
   selectedColor?: string;
+  selectedSides?: string; 
 }
 
 const QuotationPopup: React.FC<QuotationPopupProps> = ({
@@ -15,126 +16,137 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
   onClose,
   productName,
   selectedSize,
-  selectedColor
+  selectedColor,
+  selectedSides,
 }) => {
   const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    telefono: '',
-    empresa: '',
-    mensaje: '',
-    tamano: selectedSize || '',
-    color: selectedColor || '',
-    cantidad: '',
+    nombre: "",
+    email: "",
+    telefono: "",
+    empresa: "",
+    mensaje: "",
+    tamano: selectedSize || "",
+    color: selectedColor || "",
+    cantidad: "",
+    laterales: selectedSides || "", 
   });
-  
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState('');
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
-    
+
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [isOpen]);
 
   useEffect(() => {
-    if (selectedSize || selectedColor) {
-      setFormData(prev => ({
+    if (selectedSize || selectedColor || selectedSides) {
+      setFormData((prev) => ({
         ...prev,
         tamano: selectedSize || prev.tamano,
-        color: selectedColor || prev.color
+        color: selectedColor || prev.color,
+        laterales: selectedSides || prev.laterales,
       }));
     }
-  }, [selectedSize, selectedColor]);
+  }, [selectedSize, selectedColor, selectedSides]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Clear error when field is edited
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
 
   const validateForm = () => {
-    const newErrors: {[key: string]: string} = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     if (!formData.nombre.trim()) {
-      newErrors.nombre = 'Por favor ingrese su nombre';
+      newErrors.nombre = "Por favor ingrese su nombre";
     }
-    
+
     if (!formData.email.trim()) {
-      newErrors.email = 'Por favor ingrese su email';
+      newErrors.email = "Por favor ingrese su email";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Por favor ingrese un email válido';
+      newErrors.email = "Por favor ingrese un email válido";
     }
-    
+
     if (!formData.telefono.trim()) {
-      newErrors.telefono = 'Por favor ingrese su teléfono';
+      newErrors.telefono = "Por favor ingrese su teléfono";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       setIsSubmitting(true);
-      setSubmitError('');
-      
+      setSubmitError("");
+
       try {
-        
-        const response = await fetch('/api/solicitar-coti', {
-          method: 'POST',
+        const response = await fetch("/api/solicitar-coti", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
         });
-        
+
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || 'Error al enviar la solicitud');
+          throw new Error(errorData.error || "Error al enviar la solicitud");
         }
-        
+
         setSubmitSuccess(true);
-        
+
         // Resetear el formulario
         setFormData({
-          nombre: '',
-          email: '',
-          telefono: '',
-          empresa: '',
-          mensaje: '',
-          tamano: '',
-          color: '',
-          cantidad: '',
+          nombre: "",
+          email: "",
+          telefono: "",
+          empresa: "",
+          mensaje: "",
+          tamano: "",
+          color: "",
+          cantidad: "",
+          laterales: "",
         });
-        
+
         setTimeout(() => {
           onClose();
           setSubmitSuccess(false);
         }, 2000);
       } catch (error) {
-        console.error('Error al enviar el formulario:', error);
-        setSubmitError(error instanceof Error ? error.message : 'Error al enviar la solicitud');
+        console.error("Error al enviar el formulario:", error);
+        setSubmitError(
+          error instanceof Error
+            ? error.message
+            : "Error al enviar la solicitud"
+        );
       } finally {
         setIsSubmitting(false);
       }
@@ -143,14 +155,16 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
 
   if (!isOpen) return null;
 
-  const tamanosDisponibles = ['3x3', '3x4.5', '3x6', 'Hexagonal'];
-  const coloresDisponibles = ['Negro', 'Blanco', 'Rojo', 'Azul', 'Verde'];
+  const tamanosDisponibles = ["3x3", "3x4.5", "3x6", "Hexagonal"];
+  const coloresDisponibles = ["Negro", "Blanco", "Rojo", "Azul", "Verde"];
 
   return (
     <div className="popup-overlay">
       <div className="popup-container">
-        <button className="close-button" onClick={onClose}>×</button>
-        
+        <button className="close-button" onClick={onClose}>
+          ×
+        </button>
+
         {submitSuccess ? (
           <div className="success-message">
             <svg viewBox="0 0 24 24" className="success-icon">
@@ -163,16 +177,19 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
           <>
             <div className="popup-header">
               <h2>Solicitar Cotización</h2>
-              <p>{productName || 'Gazebo Aluminio HEX 40'}</p>
+              <p>{productName || "Gazebo Aluminio HEX 40"}</p>
+              {selectedSides && (
+                <p className="selected-sides">Laterales: {selectedSides}</p>
+              )}
             </div>
-            
+
             <form onSubmit={handleSubmit} className="quotation-form">
               {submitError && (
                 <div className="error-banner">
                   <p>{submitError}</p>
                 </div>
               )}
-              
+
               <div className="form-group">
                 <label htmlFor="nombre">Nombre *</label>
                 <input
@@ -181,11 +198,13 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
                   name="nombre"
                   value={formData.nombre}
                   onChange={handleChange}
-                  className={errors.nombre ? 'error' : ''}
+                  className={errors.nombre ? "error" : ""}
                 />
-                {errors.nombre && <span className="error-message">{errors.nombre}</span>}
+                {errors.nombre && (
+                  <span className="error-message">{errors.nombre}</span>
+                )}
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="email">Email *</label>
                 <input
@@ -194,11 +213,13 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={errors.email ? 'error' : ''}
+                  className={errors.email ? "error" : ""}
                 />
-                {errors.email && <span className="error-message">{errors.email}</span>}
+                {errors.email && (
+                  <span className="error-message">{errors.email}</span>
+                )}
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="telefono">Teléfono *</label>
                 <input
@@ -207,11 +228,13 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
                   name="telefono"
                   value={formData.telefono}
                   onChange={handleChange}
-                  className={errors.telefono ? 'error' : ''}
+                  className={errors.telefono ? "error" : ""}
                 />
-                {errors.telefono && <span className="error-message">{errors.telefono}</span>}
+                {errors.telefono && (
+                  <span className="error-message">{errors.telefono}</span>
+                )}
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="empresa">Empresa</label>
                 <input
@@ -222,8 +245,7 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
                   onChange={handleChange}
                 />
               </div>
-              
-              
+
               <div className="form-row">
                 <div className="form-group half">
                   <label htmlFor="tamano">Tamaño</label>
@@ -234,8 +256,10 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
                     onChange={handleChange}
                   >
                     <option value="">Seleccionar</option>
-                    {tamanosDisponibles.map(size => (
-                      <option key={size} value={size}>{size}</option>
+                    {tamanosDisponibles.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -249,7 +273,7 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
                     onChange={handleChange}
                   />
                 </div>
-                
+
                 <div className="form-group half">
                   <label htmlFor="color">Color</label>
                   <select
@@ -259,13 +283,31 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
                     onChange={handleChange}
                   >
                     <option value="">Seleccionar</option>
-                    {coloresDisponibles.map(color => (
-                      <option key={color} value={color}>{color}</option>
+                    {coloresDisponibles.map((color) => (
+                      <option key={color} value={color}>
+                        {color}
+                      </option>
                     ))}
                   </select>
                 </div>
               </div>
-              
+
+              {/* Campo para mostrar/editar laterales si existen */}
+              {(selectedSides || formData.laterales) && (
+                <div className="form-group">
+                  <label htmlFor="laterales">Laterales</label>
+                  <input
+                    type="text"
+                    id="laterales"
+                    name="laterales"
+                    value={formData.laterales}
+                    onChange={handleChange}
+                    readOnly={!!selectedSides} // Readonly si vienen preseleccionados
+                    className="laterales-input"
+                  />
+                </div>
+              )}
+
               <div className="form-group">
                 <label htmlFor="mensaje">Mensaje</label>
                 <textarea
@@ -277,13 +319,21 @@ const QuotationPopup: React.FC<QuotationPopupProps> = ({
                   placeholder="Detalles adicionales sobre su requerimiento..."
                 ></textarea>
               </div>
-              
+
               <div className="form-actions">
-                <button type="button" className="btn-secondary" onClick={onClose}>
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={onClose}
+                >
                   Cancelar
                 </button>
-                <button type="submit" className="btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Enviando...' : 'Enviar Solicitud'}
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Enviando..." : "Enviar Solicitud"}
                 </button>
               </div>
             </form>

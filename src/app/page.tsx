@@ -152,8 +152,8 @@ export default function Home() {
           <MainHeroSection
             title="Gazebos Portátiles Premium"
             subtitle="Soluciones versátiles para exteriores que combinan funcionalidad y estilo."
-            catalogButtonText="Hex 40"
-            contactButtonText="Hex 50"
+            catalogButtonText="GAZEBO LITE SERIES HEX 40"
+            contactButtonText="GAZEBO PRO SERIES HEX 50"
             catalogLink="/catalogo"
             contactLink="/contacto"
           />

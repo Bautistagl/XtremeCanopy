@@ -256,6 +256,32 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
   // Imagen por defecto si no hay una específica
   const defaultImage = "/images/product-placeholder.jpg";
 
+  // Función para renderizar los laterales
+  const renderLaterales = (item: any) => {
+    if (!item.laterales) return null;
+
+    // Si es un combo de laterales
+    if (item.laterales.startsWith("Combo Full Protección")) {
+      return (
+        <div className="item-laterales">
+          <div className="lateral-title">{item.laterales}</div>
+        </div>
+      );
+    }
+
+    // Si son laterales individuales
+    if (item.laterales.startsWith("Laterales individuales")) {
+      return (
+        <div className="item-laterales">
+          <div className="lateral-title">Laterales seleccionados:</div>
+          <div className="lateral-details">{item.laterales}</div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -329,6 +355,14 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({
                                 )}
                                 <span>Cantidad: {item.quantity}</span>
                               </div>
+
+                              {/* Mostrar información de laterales si existe */}
+                              {item.laterales && (
+                                <div className="item-laterales">
+                                  {renderLaterales(item)}
+                                </div>
+                              )}
+
                               <div className="item-price">
                                 {formatPrice(item.price)} x {item.quantity} ={" "}
                                 {formatPrice(item.price * item.quantity)}
