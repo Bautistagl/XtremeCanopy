@@ -101,7 +101,7 @@ const Hex50Screen: React.FC = () => {
 
     // Crear un objeto de producto base
     const baseProduct = {
-      name: "Gazebo Aluminio HEX 40",
+      name: "Gazebo Aluminio HEX 50",
       price: getPriceBySize50(selectedSize),
       quantity: quantity,
       size: selectedSize,
@@ -186,7 +186,7 @@ const Hex50Screen: React.FC = () => {
       <Header />
 
       <div className="breadcrumb">
-        <Link href="/">Inicio</Link> &gt; <span>Gazebo Lite Series HEX 40</span>
+        <Link href="/">Inicio</Link> &gt; <span>Gazebo Lite Series HEX 50</span>
       </div>
 
       <main className="product-detail">
@@ -214,7 +214,7 @@ const Hex50Screen: React.FC = () => {
 
         <div className="product-info">
           <div className="product-tag">Destacado</div>
-          <h1 className="product-title">Gazebo Lite Series HEX 40</h1>
+          <h1 className="product-title">Gazebo Lite Series HEX 50</h1>
           <div className="rating">
             <span className="stars">★★★★☆</span>
           </div>

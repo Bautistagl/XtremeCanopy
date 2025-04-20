@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-// Interfaces para la nueva estructura de datos
+// Interfaces para la estructura de datos actual
 interface CartItem {
   id: string;
   name: string;
@@ -10,7 +10,7 @@ interface CartItem {
   image?: string;
   size?: string;
   color?: string;
-  sides?: string;
+ laterales?: string; 
 }
 
 interface ClientInfo {
@@ -21,7 +21,6 @@ interface ClientInfo {
   direccion: string;
   ciudad: string;
   codigoPostal: string;
-  metodoPago: string;
   notasAdicionales: string;
 }
 
@@ -59,15 +58,31 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Generar la tabla HTML de productos
-    const productosHTML = items.map(item => `
-      <tr>
-        <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name}</td>
-        <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.size || 'N/A'}</td>
-        <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.color || 'N/A'}</td>
-        <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.quantity}</td>
-      </tr>
-    `).join('');
+    // Generar la tabla HTML de productos para el email al dueño
+    const productosHTML = items.map(item => {
+      // Generar HTML para los laterales si existen
+      let lateralesHTML = '';
+      if (item.laterales && item.laterales.trim() !== '') {
+        lateralesHTML = `
+          <div style="margin-top: 5px; margin-bottom: 10px;">
+            <strong>Laterales:</strong> ${item.laterales}
+          </div>
+        `;
+      }
+
+      return `
+        <tr>
+          <td style="padding: 8px; border-bottom: 1px solid #eee;">
+            ${item.name}
+            ${lateralesHTML}
+          </td>
+          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.size || 'N/A'}</td>
+          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.color || 'N/A'}</td>
+          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.quantity}</td>
+          <td style="padding: 8px; border-bottom: 1px solid #eee;">$${item.price}</td>
+        </tr>
+      `;
+    }).join('');
 
     // Definir el contenido del email para la empresa
     const mailOptions = {
@@ -84,7 +99,7 @@ export async function POST(request: NextRequest) {
           <li><strong>Dirección:</strong> ${cliente.direccion}</li>
           <li><strong>Ciudad:</strong> ${cliente.ciudad}</li>
           <li><strong>Código Postal:</strong> ${cliente.codigoPostal}</li>
-      
+
         </ul>
         
         <h2>Detalles del Pedido:</h2>
@@ -95,13 +110,17 @@ export async function POST(request: NextRequest) {
               <th style="padding: 12px 8px; text-align: left; border-bottom: 2px solid #ddd;">Tamaño</th>
               <th style="padding: 12px 8px; text-align: left; border-bottom: 2px solid #ddd;">Color</th>
               <th style="padding: 12px 8px; text-align: left; border-bottom: 2px solid #ddd;">Cantidad</th>
+              <th style="padding: 12px 8px; text-align: left; border-bottom: 2px solid #ddd;">Precio</th>
             </tr>
           </thead>
           <tbody>
             ${productosHTML}
           </tbody>
           <tfoot>
-
+            <tr>
+              <td colspan="4" style="text-align: right; padding: 12px 8px; font-weight: bold;">Total:</td>
+              <td style="padding: 12px 8px; font-weight: bold;">$${orderData.totalPrecio}</td>
+            </tr>
           </tfoot>
         </table>
         
@@ -118,14 +137,30 @@ export async function POST(request: NextRequest) {
     // Enviar confirmación al cliente
     if (cliente.email) {
       // Generar la tabla HTML de productos para el cliente (similar a la anterior)
-      const clientProductosHTML = items.map(item => `
-        <tr>
-          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name}</td>
-          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.size || 'N/A'}</td>
-          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.color || 'N/A'}</td>
-          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.quantity}</td>
-        </tr>
-      `).join('');
+      const clientProductosHTML = items.map(item => {
+        // Generar HTML para los laterales si existen
+        let lateralesHTML = '';
+        if (item.laterales && item.laterales.trim() !== '') {
+          lateralesHTML = `
+            <div style="margin-top: 5px; margin-bottom: 10px;">
+              <strong>Laterales:</strong> ${item.laterales}
+            </div>
+          `;
+        }
+
+        return `
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">
+              ${item.name}
+              ${lateralesHTML}
+            </td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.size || 'N/A'}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.color || 'N/A'}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.quantity}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">$${item.price}</td>
+          </tr>
+        `;
+      }).join('');
 
       const clientMailOptions = {
         from: process.env.EMAIL_FROM,
@@ -145,12 +180,17 @@ export async function POST(request: NextRequest) {
                   <th style="padding: 10px 8px; text-align: left; border-bottom: 2px solid #ddd;">Tamaño</th>
                   <th style="padding: 10px 8px; text-align: left; border-bottom: 2px solid #ddd;">Color</th>
                   <th style="padding: 10px 8px; text-align: left; border-bottom: 2px solid #ddd;">Cantidad</th>
+                  <th style="padding: 10px 8px; text-align: left; border-bottom: 2px solid #ddd;">Precio</th>
                 </tr>
               </thead>
               <tbody>
                 ${clientProductosHTML}
               </tbody>
               <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align: right; padding: 12px 8px; font-weight: bold;">Total:</td>
+                  <td style="padding: 12px 8px; font-weight: bold;">$${orderData.totalPrecio}</td>
+                </tr>
               </tfoot>
             </table>
             
