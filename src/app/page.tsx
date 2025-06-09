@@ -99,7 +99,6 @@ const galleryItems = [
     title: "Gazebo Hexagonal Hex 40",
     description: "",
   },
-
   {
     id: 5,
     type: "image" as const,
@@ -116,7 +115,6 @@ const galleryItems = [
     title: "Gazebo 3x6 Lite Series ",
     description: "",
   },
-
   {
     id: 6,
     type: "video" as const,
@@ -197,7 +195,6 @@ const galleryItems = [
     title: "",
     description: "",
   },
-  ,
   {
     id: 17,
     type: "image" as const,
@@ -206,7 +203,6 @@ const galleryItems = [
     title: "",
     description: "",
   },
-  ,
   {
     id: 18,
     type: "image" as const,
@@ -215,7 +211,6 @@ const galleryItems = [
     title: "",
     description: "",
   },
-  ,
   {
     id: 19,
     type: "image" as const,
@@ -224,7 +219,6 @@ const galleryItems = [
     title: "",
     description: "",
   },
-  ,
   {
     id: 20,
     type: "image" as const,
