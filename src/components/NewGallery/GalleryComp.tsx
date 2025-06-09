@@ -28,12 +28,16 @@ const GalleryComponent: React.FC<GalleryComponentProps> = ({
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
 
   // Filter items based on the current filter
-  const filteredItems = items.filter(item => {
-    if (filter === 'all') return true;
-    if (filter === 'images') return item.type === 'image';
-    if (filter === 'videos') return item.type === 'video';
+const filteredItems = items
+  .filter((item) => {
+    if (filter === "all") return true;
+    if (filter === "images") return item.type === "image";
+    if (filter === "videos") return item.type === "video";
     return true;
-  });
+  })
+  .slice(0, filter === "all" ? 9 : items.length);
+
+    
 
   // Handle item click to show the modal
   const handleItemClick = (item: GalleryItem) => {

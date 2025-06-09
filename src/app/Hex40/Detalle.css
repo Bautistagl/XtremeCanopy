@@ -643,9 +643,9 @@ img {
 
 .product-price h3 {
 
-    font-size: 1.1rem;
+    font-size: 1.7rem;
     margin-bottom: 0.8rem;
-    color: #444;
+    color: rgb(0, 0, 0)
   
 }
 .cart-price{
@@ -760,6 +760,7 @@ img {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  margin-bottom: 30px;
 }
 
 .color-preview-item {

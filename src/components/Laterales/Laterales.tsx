@@ -70,24 +70,26 @@ const lateralesIndividuales: IndividualLateral[] = [
 // Componente para la selección de laterales
 const LateralesSelector: React.FC<{
   selectedSize: string;
+  resetTrigger: string; // ← nueva prop, será `selectedSize`
   addToPrice: (price: number) => void;
   addSidesToCart: (sides: string, price: number) => void;
-}> = ({ selectedSize, addToPrice, addSidesToCart }) => {
-  const [selectedOption, setSelectedOption] = useState<"combo" | "individual" | "none">("none");
-  const [selectedIndividuals, setSelectedIndividuals] = useState<{
-    liso: number;
-    ventana: number;
-    cierre: number;
-  }>({
+}> = ({ selectedSize, resetTrigger, addToPrice, addSidesToCart }) => {
+  const [selectedOption, setSelectedOption] = useState<
+    "combo" | "individual" | "none"
+  >("none");
+  const [selectedIndividuals, setSelectedIndividuals] = useState({
     liso: 0,
     ventana: 0,
     cierre: 0,
   });
 
-  
-  const normalizedSize = selectedSize.toLowerCase() === "hexagonal" 
-    ? "HEXAGONAL" 
-    : selectedSize;
+  useEffect(() => {
+    setSelectedOption("none");
+    setSelectedIndividuals({ liso: 0, ventana: 0, cierre: 0 });
+  }, [resetTrigger]);
+
+  const normalizedSize =
+    selectedSize.toLowerCase() === "hexagonal" ? "HEXAGONAL" : selectedSize;
 
   // Obtener el combo correspondiente al tamaño seleccionado
   const combo = lateralesCombos[normalizedSize];
@@ -119,21 +121,27 @@ const LateralesSelector: React.FC<{
     if (selectedOption === "individual") {
       const totalIndividual = calculateIndividualTotal();
       addToPrice(totalIndividual);
-      
+
       const sideSummary = `Laterales individuales: ${selectedIndividuals.liso} lisos, ${selectedIndividuals.ventana} con ventana`;
       addSidesToCart(sideSummary, totalIndividual);
     }
-  }, [selectedIndividuals, selectedOption, addToPrice, addSidesToCart, availableIndividuals]);
+  }, [
+    selectedIndividuals,
+    selectedOption,
+    addToPrice,
+    addSidesToCart,
+    availableIndividuals,
+  ]);
 
   // Manejar el cambio de opción
   const handleOptionChange = (option: "combo" | "individual" | "none") => {
     setSelectedOption(option);
-    
+
     // Resetear los laterales individuales cuando cambiamos de opción
     if (option !== "individual") {
       setSelectedIndividuals({ liso: 0, ventana: 0, cierre: 0 });
     }
-    
+
     // Agregar el precio del combo al precio total si se selecciona combo
     if (option === "combo" && combo) {
       addToPrice(combo.price);
@@ -147,7 +155,10 @@ const LateralesSelector: React.FC<{
   };
 
   // Simplificar handleIndividualChange para que solo actualice el estado
-  const handleIndividualChange = (type: "liso" | "ventana" | "cierre", quantity: number) => {
+  const handleIndividualChange = (
+    type: "liso" | "ventana" | "cierre",
+    quantity: number
+  ) => {
     setSelectedIndividuals((prev) => ({
       ...prev,
       [type]: Math.max(0, quantity),
@@ -167,7 +178,7 @@ const LateralesSelector: React.FC<{
   return (
     <div className="laterales-selector">
       <h3>Agregar laterales:</h3>
-      
+
       <div className="options-container">
         <div className="option">
           <input
@@ -179,7 +190,7 @@ const LateralesSelector: React.FC<{
           />
           <label htmlFor="option-none">Sin laterales</label>
         </div>
-        
+
         <div className="option">
           <input
             type="radio"
@@ -191,7 +202,7 @@ const LateralesSelector: React.FC<{
           <label htmlFor="option-combo">
             {combo.description} : U$D {combo.price}
           </label>
-          
+
           {selectedOption === "combo" && (
             <div className="combo-details">
               <p>Incluye:</p>
@@ -203,8 +214,7 @@ const LateralesSelector: React.FC<{
             </div>
           )}
         </div>
-        
-        
+
         {hasIndividualOptions && (
           <div className="option">
             <input
@@ -215,15 +225,20 @@ const LateralesSelector: React.FC<{
               onChange={() => handleOptionChange("individual")}
             />
             <label htmlFor="option-individual">Laterales individuales</label>
-            
+
             {selectedOption === "individual" && (
               <div className="individual-options">
-                {availableIndividuals.some(l => l.type === "liso") && (
+                {availableIndividuals.some((l) => l.type === "liso") && (
                   <div className="quantity-selector">
                     <label>Lateral liso:</label>
                     <div className="quantity-controls">
                       <button
-                        onClick={() => handleIndividualChange("liso", selectedIndividuals.liso - 1)}
+                        onClick={() =>
+                          handleIndividualChange(
+                            "liso",
+                            selectedIndividuals.liso - 1
+                          )
+                        }
                         className="size-option"
                       >
                         -
@@ -231,29 +246,47 @@ const LateralesSelector: React.FC<{
                       <input
                         type="number"
                         value={selectedIndividuals.liso}
-                        onChange={(e) => handleIndividualChange("liso", parseInt(e.target.value) || 0)}
+                        onChange={(e) =>
+                          handleIndividualChange(
+                            "liso",
+                            parseInt(e.target.value) || 0
+                          )
+                        }
                         min="0"
                         className="quantity-input"
                       />
                       <button
-                        onClick={() => handleIndividualChange("liso", selectedIndividuals.liso + 1)}
+                        onClick={() =>
+                          handleIndividualChange(
+                            "liso",
+                            selectedIndividuals.liso + 1
+                          )
+                        }
                         className="size-option"
                       >
                         +
                       </button>
                       <span className="price">
-                        U$D {availableIndividuals.find(l => l.type === "liso")?.price || 0} c/u
+                        U$D{" "}
+                        {availableIndividuals.find((l) => l.type === "liso")
+                          ?.price || 0}{" "}
+                        c/u
                       </span>
                     </div>
                   </div>
                 )}
-                
-                {availableIndividuals.some(l => l.type === "ventana") && (
+
+                {availableIndividuals.some((l) => l.type === "ventana") && (
                   <div className="quantity-selector">
                     <label>Lateral con ventana:</label>
                     <div className="quantity-controls">
                       <button
-                        onClick={() => handleIndividualChange("ventana", selectedIndividuals.ventana - 1)}
+                        onClick={() =>
+                          handleIndividualChange(
+                            "ventana",
+                            selectedIndividuals.ventana - 1
+                          )
+                        }
                         className="size-option"
                       >
                         -
@@ -261,25 +294,36 @@ const LateralesSelector: React.FC<{
                       <input
                         type="number"
                         value={selectedIndividuals.ventana}
-                        onChange={(e) => handleIndividualChange("ventana", parseInt(e.target.value) || 0)}
+                        onChange={(e) =>
+                          handleIndividualChange(
+                            "ventana",
+                            parseInt(e.target.value) || 0
+                          )
+                        }
                         min="0"
                         className="quantity-input"
                       />
                       <button
-                        onClick={() => handleIndividualChange("ventana", selectedIndividuals.ventana + 1)}
+                        onClick={() =>
+                          handleIndividualChange(
+                            "ventana",
+                            selectedIndividuals.ventana + 1
+                          )
+                        }
                         className="size-option"
                       >
                         +
                       </button>
                       <span className="price">
-                        U$D {availableIndividuals.find(l => l.type === "ventana")?.price || 0} c/u
+                        U$D{" "}
+                        {availableIndividuals.find((l) => l.type === "ventana")
+                          ?.price || 0}{" "}
+                        c/u
                       </span>
                     </div>
                   </div>
                 )}
-                
-              
-                
+
                 <div className="total-price">
                   <p>Total laterales: U$D {calculateIndividualTotal()}</p>
                 </div>

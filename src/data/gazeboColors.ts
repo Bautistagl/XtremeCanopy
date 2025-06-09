@@ -8,6 +8,6 @@ export interface ColorOption {
     { name: "Blanco", value: "white" },
     { name: "Rojo", value: "red" },
     { name: "Azul", value: "blue" },
-    { name: "Naranja", value: "rgb(255, 110, 0)" },
+    { name: "Naranja", value: "orange" },
     { name: "Verde", value: "green" },
   ];

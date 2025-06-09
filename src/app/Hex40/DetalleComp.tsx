@@ -14,7 +14,12 @@ import "./Detalle.css";
 import Header from "@/components/Header/Header";
 
 // Importar datos desde archivos separados
-import { imagesBySize, ThumbnailImage } from "@/data/gazeboImages";
+import {
+  availableColorsByCategorySize,
+  availableSizesByCategory,
+  imagesByCategory,
+  ThumbnailImage,
+} from "@/data/gazeboImages";
 import { sizes } from "@/data/gazeboSizes";
 import { colors } from "@/data/gazeboColors";
 import { getPriceBySize } from "@/utils/pricing40";
@@ -23,51 +28,57 @@ import { getPriceBySize } from "@/utils/pricing40";
 import LateralesSelector from "@/components/Laterales/Laterales";
 
 const ProductDetail: React.FC = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("HEX 40");
   const [selectedSize, setSelectedSize] = useState<string>("3x3");
   const [selectedColor, setSelectedColor] = useState<string>("black");
-  const [mainImage, setMainImage] = useState<string>(
-    "/images/gazebos/3x3/black/main.jpg"
-  );
+
+  const [mainImage, setMainImage] = useState<string>("");
   const [thumbnailImages, setThumbnailImages] = useState<
     { src: string; alt: string }[]
   >([]);
+
   const [quantity, setQuantity] = useState<number>(1);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("caracteristicas");
+
   const { addItem } = useCart();
   const [currentPrice, setCurrentPrice] = useState<number>(
     getPriceBySize("3x3")
   );
 
-  // Nuevo estado para manejar los laterales
   const [additionalPrice, setAdditionalPrice] = useState<number>(0);
   const [selectedSides, setSelectedSides] = useState<string>("");
 
-  // Actualizar el precio total cuando cambia el tamaño o se agregan laterales
   useEffect(() => {
     setCurrentPrice(getPriceBySize(selectedSize) + additionalPrice);
   }, [selectedSize, additionalPrice]);
 
-  // Función para actualizar las imágenes según tamaño y color
   const updateImages = () => {
-    // Verificamos que el tamaño seleccionado exista en nuestro objeto
-    if (selectedSize in imagesBySize) {
-      const sizeImages = imagesBySize[selectedSize];
-      // Verificamos que el color seleccionado exista para ese tamaño
-      if (selectedColor in sizeImages) {
-        setMainImage(sizeImages[selectedColor].main);
-        setThumbnailImages(sizeImages[selectedColor].thumbnails);
-      }
-    }
+    const categoryImages = imagesByCategory[selectedCategory];
+    if (!categoryImages) return;
+
+    const sizeImages = categoryImages[selectedSize];
+    if (!sizeImages) return;
+
+    const colorImages = sizeImages[selectedColor];
+    if (!colorImages) return;
+
+    setMainImage(colorImages.main);
+    setThumbnailImages(colorImages.thumbnails);
   };
 
-  // Actualizar imágenes cuando cambia el tamaño o color
   useEffect(() => {
     updateImages();
-  }, [selectedSize, selectedColor]);
+  }, [selectedCategory, selectedSize, selectedColor]);
 
   const handleSizeChange = (size: string) => {
     setSelectedSize(size);
+
+    const validColors =
+      availableColorsByCategorySize[selectedCategory]?.[size] || [];
+    if (!validColors.includes(selectedColor)) {
+      setSelectedColor(validColors[0] || "");
+    }
 
     setAdditionalPrice(0);
     setSelectedSides("");
@@ -77,35 +88,40 @@ const ProductDetail: React.FC = () => {
     setSelectedColor(color);
   };
 
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+
+    const validSizes = availableSizesByCategory[category];
+    if (!validSizes.includes(selectedSize)) {
+      setSelectedSize(validSizes[0]);
+    }
+
+    setAdditionalPrice(0);
+    setSelectedSides("");
+  };
+
   const handleThumbnailClick = (image: string) => {
     setMainImage(image);
   };
 
-  // Función para manejar la adición de precio por laterales
   const handleAddToPrice = (price: number) => {
     setAdditionalPrice(price);
   };
 
-  // Función para manejar la selección de laterales
   const handleAddSidesToCart = (sides: string, price: number) => {
     setSelectedSides(sides);
     setAdditionalPrice(price);
   };
 
   const handleAddToCart = () => {
-    const selectedColorName =
-      colors.find((c) => c.value === selectedColor)?.name || selectedColor;
-
-    // Usar la imagen principal actual para el carrito
     const productImage = mainImage;
 
-    // Crear un objeto de producto base
     const baseProduct = {
-      name: "Gazebo Aluminio HEX 40",
+      name: `Gazebo Aluminio ${selectedCategory}`,
       price: getPriceBySize(selectedSize),
       quantity: quantity,
       size: selectedSize,
-      color: selectedColorName,
+      color: selectedColor,
       image: productImage,
       sides: selectedSides,
       additionalPrice: additionalPrice,
@@ -123,14 +139,12 @@ const ProductDetail: React.FC = () => {
 
     addItem(productToAdd);
 
-    // Construir el mensaje de confirmación
     let confirmationMessage = `<br>
-       <strong>${productToAdd.name}</strong><br>
-       Tamaño: <strong>${productToAdd.size} </strong><br>
-       Color: <strong>${productToAdd.color}</strong><br>
-       Cantidad: <strong>${productToAdd.quantity}</strong>`;
+      <strong>${productToAdd.name}</strong><br>
+      Tamaño: <strong>${productToAdd.size}</strong><br>
+      Color: <strong>${productToAdd.color}</strong><br>
+      Cantidad: <strong>${productToAdd.quantity}</strong>`;
 
-    // Agregar información de laterales si están seleccionados
     if (selectedSides) {
       confirmationMessage += `<br>Laterales: <strong>${selectedSides}</strong>`;
     }
@@ -153,34 +167,36 @@ const ProductDetail: React.FC = () => {
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
-
-  // Generar miniaturas de colores disponibles para el tamaño seleccionado
   const getColorThumbnails = () => {
-    const colorThumbnails: Array<{
+    const thumbnails: Array<{
       color: string;
       name: string;
       image: string;
     }> = [];
 
-    // Verificamos que el tamaño seleccionado exista en nuestro objeto
-    if (selectedSize in imagesBySize) {
-      const sizeImages = imagesBySize[selectedSize];
+    const categoryImages = imagesByCategory[selectedCategory];
+    if (!categoryImages) return thumbnails;
 
-      for (const color of colors) {
-        // Verificamos que el color exista para ese tamaño
-        if (color.value in sizeImages) {
-          colorThumbnails.push({
-            color: color.value,
-            name: color.name,
-            image: sizeImages[color.value].main,
-          });
-        }
+    const sizeImages = categoryImages[selectedSize];
+    if (!sizeImages) return thumbnails;
+
+    const validColors =
+      availableColorsByCategorySize[selectedCategory]?.[selectedSize] || [];
+
+    for (const color of validColors) {
+      const colorData = colors.find((c) => c.value === color);
+      if (sizeImages[color] && colorData) {
+        thumbnails.push({
+          color: colorData.value, // "black"
+          name: colorData.name, // "Negro"
+          image: sizeImages[color].main,
+        });
       }
     }
 
-    return colorThumbnails;
+    return thumbnails;
   };
-
+  const validSizes = availableSizesByCategory[selectedCategory] || [];
   return (
     <div className="product-container">
       <Header />
@@ -192,12 +208,14 @@ const ProductDetail: React.FC = () => {
       <main className="product-detail">
         <div className="product-gallery">
           <div className="main-image">
-            <Image
-              height={400}
-              width={400}
-              src={mainImage}
-              alt={`Gazebo Aluminio HEX 40 ${selectedSize} ${selectedColor}`}
-            />
+            {mainImage ? (
+              <Image
+                height={400}
+                width={400}
+                src={mainImage}
+                alt={`Gazebo Aluminio HEX 40 ${selectedSize} ${selectedColor}`}
+              />
+            ) : null}
           </div>
           <div className="thumbnail-gallery">
             {thumbnailImages.map((img, index) => (
@@ -232,15 +250,15 @@ const ProductDetail: React.FC = () => {
             <div className="size-selector">
               <h3>Tamaños disponibles:</h3>
               <div className="size-options">
-                {sizes.map((size) => (
+                {validSizes.map((size) => (
                   <button
-                    key={size.size}
+                    key={size}
                     className={`size-option ${
-                      selectedSize === size.size ? "active" : ""
+                      selectedSize === size ? "active" : ""
                     }`}
-                    onClick={() => handleSizeChange(size.size)}
+                    onClick={() => handleSizeChange(size)}
                   >
-                    {size.size}
+                    {size}
                   </button>
                 ))}
               </div>
@@ -258,36 +276,52 @@ const ProductDetail: React.FC = () => {
                     }`}
                     onClick={() => handleColorChange(item.color)}
                   >
-                    <Image
-                      height={60}
-                      width={60}
-                      src={item.image}
-                      alt={`Gazebo ${selectedSize} ${item.name}`}
-                    />
+                    {selectedCategory === "HEX 40" &&
+                    selectedSize === "Hexagonal" ? (
+                      <div
+                        style={{
+                          width: 60,
+                          height: 60,
+                          borderRadius: "50%",
+                          backgroundColor: item.color,
+                          border: "1px solid #ccc",
+                        }}
+                        title={item.name}
+                      />
+                    ) : (
+                      <Image
+                        height={60}
+                        width={60}
+                        src={item.image}
+                        alt={`Gazebo ${selectedSize} ${item.name}`}
+                      />
+                    )}
                     <span>{item.name}</span>
                   </div>
                 ))}
               </div>
             </div>
 
+            <div className="product-price">
+              <h3>Precio: U$D{currentPrice.toLocaleString()}</h3>
+              {additionalPrice > 0 && (
+                <p className="price-breakdown">
+                  Base: U$D{getPriceBySize(selectedSize).toLocaleString()} +
+                  Laterales: U$D{additionalPrice.toLocaleString()}
+                </p>
+              )}
+            </div>
             {/* Agregar el componente de selección de laterales */}
             <div className="laterales-section">
               <LateralesSelector
                 selectedSize={selectedSize}
+                resetTrigger={selectedSize}
                 addToPrice={handleAddToPrice}
                 addSidesToCart={handleAddSidesToCart}
               />
             </div>
           </div>
-          <div className="product-price">
-            <h3>Precio: U$D{currentPrice.toLocaleString()}</h3>
-            {additionalPrice > 0 && (
-              <p className="price-breakdown">
-                Base: U$D{getPriceBySize(selectedSize).toLocaleString()} +
-                Laterales: U$D{additionalPrice.toLocaleString()}
-              </p>
-            )}
-          </div>
+
           <div className="quantity-selector">
             <h3>Cantidad:</h3>
             <div className="quantity-controls">
@@ -466,21 +500,23 @@ const ProductDetail: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {sizes.map((size) => (
-                      <tr
-                        key={size.size}
-                        className={
-                          selectedSize === size.size ? "highlighted" : ""
-                        }
-                      >
-                        <td>{size.size}</td>
-                        <td>{size.height}</td>
-                        <td>{size.width}</td>
-                        <td>{size.depth}</td>
-                        <td>{size.weight}</td>
-                        <td>{size.weight2}</td>
-                      </tr>
-                    ))}
+                    {sizes
+                      .filter((size) => validSizes.includes(size.size))
+                      .map((size) => (
+                        <tr
+                          key={size.size}
+                          className={
+                            selectedSize === size.size ? "highlighted" : ""
+                          }
+                        >
+                          <td>{size.size}</td>
+                          <td>{size.height}</td>
+                          <td>{size.width}</td>
+                          <td>{size.depth}</td>
+                          <td>{size.weight}</td>
+                          <td>{size.weight2}</td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
