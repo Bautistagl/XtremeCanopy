@@ -28,14 +28,14 @@ export const sizes = ["3x3", "3x4.5", "3x6", "Hexagonal"];
 export const colors = ["black", "white", "red", "blue", "green", "orange"];
 export const availableSizesByCategory: { [category: string]: string[] } = {
   "HEX 40": ["3x3", "3x4.5", "3x6", "Hexagonal"],
-  "HEX 50": ["3x3", "3x4.5", "3x6"], // sin hexagonal
+  "HEX 50": ["3x3", "3x4.5", "3x6"],
 };
 
 export const availableColorsByCategorySize: {
   [category: string]: { [size: string]: string[] };
 } = {
   "HEX 40": {
-    "Hexagonal": colors, 
+    Hexagonal: colors,
     "3x3": colors,
     "3x4.5": colors,
     "3x6": colors,
@@ -67,8 +67,14 @@ function generateCategoryImages(category: "HEX 40" | "HEX 50"): CategoryImages {
 
       images[size][colorKey] = isHex40Hexagonal
         ? {
-            main: "", // o una imagen genérica si querés
-            thumbnails: [ {
+            main:
+              normalizedColor === "blue" ||
+              normalizedColor === "black" ||
+              normalizedColor === "white"
+                ? `/images/colores/${size}/${normalizedColor}/main.png`
+                : "/images/placeh.svg",
+            thumbnails: [
+              {
                 src: `/images/info/${category}/1.png`,
                 alt: `Información estructura ${category}`,
               },
@@ -83,7 +89,8 @@ function generateCategoryImages(category: "HEX 40" | "HEX 50"): CategoryImages {
               {
                 src: `/images/info/${category}/4.png`,
                 alt: `Información estructura ${category}`,
-              },], // sin thumbnails
+              },
+            ], // sin thumbnails
           }
         : {
             main: `/images/colores/${size}/${normalizedColor}/main.png`,

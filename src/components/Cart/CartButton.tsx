@@ -34,7 +34,7 @@ const ColorCircle: React.FC<{ color: string }> = ({ color }) => {
       rojo: "#FF0000",
       azul: "#0000FF",
       verde: "#008000",
-      naranja: "#FFA500",
+      naranja: "#ff8800ff",
       // Puedes agregar más colores según necesites
     };
 

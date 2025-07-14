@@ -10,22 +10,22 @@ const ColorCircle: React.FC<{ color: string }> = ({ color }) => {
   // Convertir nombres de colores comunes a sus valores hexadecimales
   const getColorValue = (colorName: string): string => {
     const colorMap: Record<string, string> = {
-      negro: '#000000',
-      blanco: '#FFFFFF',
-      rojo: '#FF0000',
-      azul: '#0000FF',
-      verde: '#008000',
-      amarillo: '#FFFF00',
-      naranja: '#FFA500',
-      morado: '#800080',
-      rosado: '#FFC0CB',
-      gris: '#808080',
-      marron: '#A52A2A',
-      marrón: '#A52A2A',
-      cafe: '#A52A2A',
-      café: '#A52A2A',
-      brown: '#A52A2A',
-      beige: '#F5F5DC',
+      negro: "#000000",
+      blanco: "#FFFFFF",
+      rojo: "#FF0000",
+      azul: "#0000FF",
+      verde: "#008000",
+      amarillo: "#FFFF00",
+      naranja: "#ff2600ff",
+      morado: "#800080",
+      rosado: "#FFC0CB",
+      gris: "#808080",
+      marron: "#A52A2A",
+      marrón: "#A52A2A",
+      cafe: "#A52A2A",
+      café: "#A52A2A",
+      brown: "#A52A2A",
+      beige: "#F5F5DC",
     };
     
     return colorMap[colorName.toLowerCase()] || colorName;

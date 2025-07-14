@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
-import './Laterales.css'; 
+import { useState, useEffect, useCallback } from "react";
+import "./Laterales.css";
+import { availableSizesByCategory } from "@/data/gazeboImages";
+import { supabase } from "@/supabase/supabase";
 
 type LateralCombo = {
   size: string;
@@ -12,7 +14,32 @@ type IndividualLateral = {
   size: string;
   type: "liso" | "ventana" | "cierre";
   price: number;
+  stock: boolean;
 };
+type ComboProducto = {
+  size: string;
+  stock: boolean;
+};
+interface StockProducto {
+  id: string;
+  producto_id: string;
+  tipo_item:
+    | "producto_base"
+    | "lateral liso"
+    | "lateral con ventana"
+    | "lateral con cierre"
+    | "combo";
+  hay_stock: boolean;
+}
+
+interface CategoriaProducto {
+  id: string;
+  nombre_categoria: "HEX40" | "HEX50";
+  nombre_producto: "3x4.5" | "3x3" | "3x6" | "hexagonal";
+}
+interface StockProductoConNombre extends StockProducto {
+  nombre_producto?: string;
+}
 
 const lateralesCombos: Record<string, LateralCombo> = {
   "3x3": {
@@ -45,7 +72,7 @@ const lateralesCombos: Record<string, LateralCombo> = {
       "1 lateral con cierre para entrar o/salir",
     ],
   },
-  "HEXAGONAL": {
+  HEXAGONAL: {
     size: "HEXAGONAL",
     price: 510,
     description: "Combo Full Protección",
@@ -57,20 +84,10 @@ const lateralesCombos: Record<string, LateralCombo> = {
   },
 };
 
-
-const lateralesIndividuales: IndividualLateral[] = [
-  { size: "3x3", type: "liso", price: 90 },
-  { size: "3x3", type: "ventana", price: 90 },
-  { size: "3x4.5", type: "liso", price: 115 },
-  { size: "3x4.5", type: "ventana", price: 115 },
-
- 
-];
-
 // Componente para la selección de laterales
 const LateralesSelector: React.FC<{
   selectedSize: string;
-  resetTrigger: string; // ← nueva prop, será `selectedSize`
+  resetTrigger: string;
   addToPrice: (price: number) => void;
   addSidesToCart: (sides: string, price: number) => void;
 }> = ({ selectedSize, resetTrigger, addToPrice, addSidesToCart }) => {
@@ -82,7 +99,175 @@ const LateralesSelector: React.FC<{
     ventana: 0,
     cierre: 0,
   });
+  const [lateralesIndividuales, setLateralesIndividuales] = useState<
+    IndividualLateral[]
+  >([
+    { size: "3x3", type: "liso", price: 90, stock: true },
+    { size: "3x3", type: "ventana", price: 90, stock: true },
+    { size: "3x3", type: "cierre", price: 90, stock: true },
+    { size: "3x4.5", type: "liso", price: 115, stock: true },
+    { size: "3x4.5", type: "ventana", price: 115, stock: true },
+    { size: "3x4.5", type: "cierre", price: 115, stock: true },
+    { size: "3x6", type: "ventana", price: 90, stock: true },
+    { size: "3x6", type: "liso", price: 90, stock: true },
+    { size: "3x6", type: "cierre", price: 90, stock: true },
+    { size: "Hexagonal", type: "ventana", price: 90, stock: true },
+    { size: "Hexagonal", type: "liso", price: 90, stock: true },
+    { size: "Hexagonal", type: "cierre", price: 90, stock: true },
+  ]);
+  const [combosStock, setCombosStock] = useState<ComboProducto[]>([
+    { size: "3x3", stock: true },
+    { size: "3x4.5", stock: true },
+    { size: "3x6", stock: true },
+    { size: "Hexagonal", stock: true },
+  ]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("HEX 40");
+  const [stockStatusMap, setStockStatusMap] = useState<Map<string, boolean>>(
+    new Map()
+  );
+  const [individualLateralStockMap, setIndividualLateralStockMap] = useState<
+    Map<string, boolean> // La clave será "3x3-liso", "3x3-ventana", etc.
+  >(new Map());
+  const validSizes = availableSizesByCategory[selectedCategory] || [];
+  const [stockProductos, setStockProductos] = useState<StockProducto[]>([]);
+  const [categoriasProductos, setCategoriasProductos] = useState<
+    CategoriaProducto[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const normalizeTipoItem = (tipoItem: string): string => {
+    if (tipoItem.includes("liso")) return "liso";
+    if (tipoItem.includes("ventana")) return "ventana";
+    if (tipoItem.includes("cierre")) return "cierre";
+    // Puedes añadir más casos si tienes otros tipos en el futuro
+    return tipoItem; // Devuelve el original si no hay coincidencia
+  };
+  const getStockLaterales = useCallback((): StockProductoConNombre[] => {
+    const categoriasMap = new Map<string, CategoriaProducto>();
+    categoriasProductos.forEach((cat) => {
+      categoriasMap.set(cat.id, cat);
+    });
 
+    const stockFiltradoConNombre: StockProductoConNombre[] = stockProductos
+      .filter((stockItem) => {
+        const categoriaRelacionada = categoriasMap.get(stockItem.producto_id);
+        return (
+          stockItem.tipo_item !== "producto_base" &&
+          categoriaRelacionada &&
+          categoriaRelacionada.nombre_categoria === "HEX40"
+        );
+      })
+      .map((stockItem) => {
+        const categoriaRelacionada = categoriasMap.get(stockItem.producto_id)!;
+        return {
+          ...stockItem,
+          nombre_producto: categoriaRelacionada.nombre_producto,
+        };
+      });
+
+    return stockFiltradoConNombre;
+  }, [stockProductos, categoriasProductos]);
+  useEffect(() => {
+    if (!loading && !error && selectedCategory === "HEX 40") {
+      const stockData = getStockLaterales(); // Esto ya filtra por nombre_categoria === "HEX40"
+      const newStockStatusMap = new Map<string, boolean>();
+      const stockDataMap = new Map<string, Map<string, boolean>>();
+
+      // Variables para recolectar el stock de combos
+      const updatedCombosStockMap = new Map<string, boolean>();
+
+      stockData.forEach((item) => {
+        // Lógica existente para laterales individuales
+        const normalizedTipoItem = normalizeTipoItem(item.tipo_item);
+        if (item.nombre_producto && normalizedTipoItem) {
+          if (!stockDataMap.has(item.nombre_producto)) {
+            stockDataMap.set(item.nombre_producto, new Map<string, boolean>());
+          }
+          stockDataMap
+            .get(item.nombre_producto)
+            ?.set(normalizedTipoItem, item.hay_stock);
+        }
+
+        // Lógica para el stock general del producto (si aplica)
+        if (item.nombre_producto && validSizes.includes(item.nombre_producto)) {
+          newStockStatusMap.set(item.nombre_producto, item.hay_stock);
+        }
+
+        // ***** NUEVA LÓGICA PARA ACTUALIZAR COMBOS *****
+        // Verificamos si es un item de tipo "combo" Y si su nombre_producto
+        // coincide con un tamaño que manejamos para combos.
+        if (item.tipo_item === "combo" && item.nombre_producto) {
+          // Aquí, 'item.nombre_producto' (ej. "3x3", "3x6") es el 'size' del combo
+          updatedCombosStockMap.set(item.nombre_producto, item.hay_stock);
+        }
+      });
+
+      setStockStatusMap(newStockStatusMap);
+
+      // Actualizar lateralesIndividuales
+      setLateralesIndividuales((prevLaterales) => {
+        return prevLaterales.map((lateral) => {
+          const stockInfoForSize = stockDataMap.get(lateral.size);
+          if (stockInfoForSize) {
+            const stockValue = stockInfoForSize.get(lateral.type);
+            if (stockValue !== undefined) {
+              return { ...lateral, stock: stockValue };
+            }
+          }
+          return lateral;
+        });
+      });
+
+      // ***** APLICAR LA ACTUALIZACIÓN A COMBOSSTOCK *****
+      setCombosStock((prevCombos) => {
+        return prevCombos.map((combo) => {
+          // Si encontramos una entrada para este tamaño de combo en el mapa de stock
+          if (updatedCombosStockMap.has(combo.size)) {
+            return { ...combo, stock: updatedCombosStockMap.get(combo.size)! };
+          }
+          return combo; // Si no hay información de stock para este combo, mantenemos su estado actual
+        });
+      });
+      // ************************************************
+    } else if (selectedCategory !== "HEX 40") {
+      setStockStatusMap(new Map());
+      // Opcional: Si cambias de categoría y quieres resetear el stock de laterales individuales/combos
+      // setLateralesIndividuales(valorInicialDeLateralesIndividuales);
+      // setCombosStock(valorInicialDeCombosStock); // Podrías tener una constante con los valores iniciales
+    }
+  }, [loading, error, getStockLaterales, selectedCategory, validSizes]);
+  useEffect(() => {
+    const fetchSupabaseData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const { data: stockData, error: stockError } = await supabase
+          .from("stock_productos")
+          .select("*");
+
+        if (stockError) {
+          throw stockError;
+        }
+        setStockProductos(stockData as StockProducto[]);
+
+        const { data: categoriasData, error: categoriasError } = await supabase
+          .from("categorias_productos")
+          .select("*");
+
+        if (categoriasError) {
+          throw categoriasError;
+        }
+        setCategoriasProductos(categoriasData as CategoriaProducto[]);
+      } catch (err: any) {
+        setError(err.message);
+        console.error("Error fetching data from Supabase:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSupabaseData();
+  }, []);
   useEffect(() => {
     setSelectedOption("none");
     setSelectedIndividuals({ liso: 0, ventana: 0, cierre: 0 });
@@ -91,9 +276,12 @@ const LateralesSelector: React.FC<{
   const normalizedSize =
     selectedSize.toLowerCase() === "hexagonal" ? "HEXAGONAL" : selectedSize;
 
-  // Obtener el combo correspondiente al tamaño seleccionado
   const combo = lateralesCombos[normalizedSize];
+  const currentComboStock = combosStock.find(
+    (cs) => cs.size.toLocaleUpperCase() === combo.size
+  );
 
+  const isComboDisabled = !currentComboStock?.stock;
   // Filtrar laterales individuales para el tamaño seleccionado
   const availableIndividuals = lateralesIndividuales.filter(
     (lateral) => lateral.size === selectedSize
@@ -110,6 +298,8 @@ const LateralesSelector: React.FC<{
         total += lateral.price * selectedIndividuals.liso;
       } else if (lateral.type === "ventana") {
         total += lateral.price * selectedIndividuals.ventana;
+      } else if (lateral.type === "cierre") {
+        total += lateral.price * selectedIndividuals.cierre;
       }
     }
     return total;
@@ -121,8 +311,7 @@ const LateralesSelector: React.FC<{
     if (selectedOption === "individual") {
       const totalIndividual = calculateIndividualTotal();
       addToPrice(totalIndividual);
-
-      const sideSummary = `Laterales individuales: ${selectedIndividuals.liso} lisos, ${selectedIndividuals.ventana} con ventana`;
+      const sideSummary = `Laterales individuales: ${selectedIndividuals.liso} lisos, ${selectedIndividuals.ventana} con ventana, ${selectedIndividuals.cierre} con cierre`;
       addSidesToCart(sideSummary, totalIndividual);
     }
   }, [
@@ -198,9 +387,17 @@ const LateralesSelector: React.FC<{
             name="laterales-option"
             checked={selectedOption === "combo"}
             onChange={() => handleOptionChange("combo")}
+            disabled={isComboDisabled}
           />
-          <label htmlFor="option-combo">
+          <label
+            htmlFor="option-combo"
+            className={isComboDisabled ? "disabled-option" : ""}
+          >
+            {" "}
             {combo.description} : U$D {combo.price}
+            {isComboDisabled && (
+              <span className="no-stock-msg"> (Sin stock)</span>
+            )}{" "}
           </label>
 
           {selectedOption === "combo" && (
@@ -232,94 +429,203 @@ const LateralesSelector: React.FC<{
                   <div className="quantity-selector">
                     <label>Lateral liso:</label>
                     <div className="quantity-controls">
-                      <button
-                        onClick={() =>
-                          handleIndividualChange(
-                            "liso",
-                            selectedIndividuals.liso - 1
-                          )
-                        }
-                        className="size-option"
-                      >
-                        -
-                      </button>
-                      <input
-                        type="number"
-                        value={selectedIndividuals.liso}
-                        onChange={(e) =>
-                          handleIndividualChange(
-                            "liso",
-                            parseInt(e.target.value) || 0
-                          )
-                        }
-                        min="0"
-                        className="quantity-input"
-                      />
-                      <button
-                        onClick={() =>
-                          handleIndividualChange(
-                            "liso",
-                            selectedIndividuals.liso + 1
-                          )
-                        }
-                        className="size-option"
-                      >
-                        +
-                      </button>
-                      <span className="price">
-                        U$D{" "}
-                        {availableIndividuals.find((l) => l.type === "liso")
-                          ?.price || 0}{" "}
-                        c/u
-                      </span>
+                      {(() => {
+                        const lisoLateral = availableIndividuals.find(
+                          (l) => l.type === "liso"
+                        );
+                        const isLisoDisabled = !lisoLateral?.stock;
+
+                        return (
+                          <>
+                            <button
+                              onClick={() =>
+                                handleIndividualChange(
+                                  "liso",
+                                  selectedIndividuals.liso - 1
+                                )
+                              }
+                              className="size-option"
+                              disabled={
+                                isLisoDisabled || selectedIndividuals.liso <= 0
+                              }
+                            >
+                              -
+                            </button>
+                            <input
+                              type="number"
+                              value={selectedIndividuals.liso}
+                              onChange={(e) =>
+                                handleIndividualChange(
+                                  "liso",
+                                  parseInt(e.target.value) || 0
+                                )
+                              }
+                              min="0"
+                              className="quantity-input"
+                              disabled={isLisoDisabled} // Deshabilita el input si no hay stock
+                            />
+                            <button
+                              onClick={() =>
+                                handleIndividualChange(
+                                  "liso",
+                                  selectedIndividuals.liso + 1
+                                )
+                              }
+                              className="size-option"
+                              disabled={isLisoDisabled} // Deshabilita si no hay stock
+                            >
+                              +
+                            </button>
+                            <span className="price">
+                              U$D {lisoLateral?.price || 0} c/u
+                              {isLisoDisabled && (
+                                <span className="no-stock-msg">
+                                  {" "}
+                                  (Sin stock)
+                                </span>
+                              )}
+                            </span>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 )}
 
+                {/* Lateral con ventana */}
                 {availableIndividuals.some((l) => l.type === "ventana") && (
                   <div className="quantity-selector">
                     <label>Lateral con ventana:</label>
                     <div className="quantity-controls">
-                      <button
-                        onClick={() =>
-                          handleIndividualChange(
-                            "ventana",
-                            selectedIndividuals.ventana - 1
-                          )
-                        }
-                        className="size-option"
-                      >
-                        -
-                      </button>
-                      <input
-                        type="number"
-                        value={selectedIndividuals.ventana}
-                        onChange={(e) =>
-                          handleIndividualChange(
-                            "ventana",
-                            parseInt(e.target.value) || 0
-                          )
-                        }
-                        min="0"
-                        className="quantity-input"
-                      />
-                      <button
-                        onClick={() =>
-                          handleIndividualChange(
-                            "ventana",
-                            selectedIndividuals.ventana + 1
-                          )
-                        }
-                        className="size-option"
-                      >
-                        +
-                      </button>
-                      <span className="price">
-                        U$D{" "}
-                        {availableIndividuals.find((l) => l.type === "ventana")
-                          ?.price || 0}{" "}
-                        c/u
-                      </span>
+                      {(() => {
+                        const ventanaLateral = availableIndividuals.find(
+                          (l) => l.type === "ventana"
+                        );
+                        const isVentanaDisabled = !ventanaLateral?.stock;
+
+                        return (
+                          <>
+                            <button
+                              onClick={() =>
+                                handleIndividualChange(
+                                  "ventana",
+                                  selectedIndividuals.ventana - 1
+                                )
+                              }
+                              className="size-option"
+                              disabled={
+                                isVentanaDisabled ||
+                                selectedIndividuals.ventana <= 0
+                              }
+                            >
+                              -
+                            </button>
+                            <input
+                              type="number"
+                              value={selectedIndividuals.ventana}
+                              onChange={(e) =>
+                                handleIndividualChange(
+                                  "ventana",
+                                  parseInt(e.target.value) || 0
+                                )
+                              }
+                              min="0"
+                              className="quantity-input"
+                              disabled={isVentanaDisabled}
+                            />
+                            <button
+                              onClick={() =>
+                                handleIndividualChange(
+                                  "ventana",
+                                  selectedIndividuals.ventana + 1
+                                )
+                              }
+                              className="size-option"
+                              disabled={isVentanaDisabled}
+                            >
+                              +
+                            </button>
+                            <span className="price">
+                              U$D {ventanaLateral?.price || 0} c/u
+                              {isVentanaDisabled && (
+                                <span className="no-stock-msg">
+                                  {" "}
+                                  (Sin stock)
+                                </span>
+                              )}
+                            </span>
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                )}
+
+                {/* Lateral con cierre */}
+                {availableIndividuals.some((l) => l.type === "cierre") && (
+                  <div className="quantity-selector">
+                    <label>Lateral con cierre:</label>
+                    <div className="quantity-controls">
+                      {(() => {
+                        const cierreLateral = availableIndividuals.find(
+                          (l) => l.type === "cierre"
+                        );
+                        const isCierreDisabled = !cierreLateral?.stock;
+
+                        return (
+                          <>
+                            <button
+                              onClick={() =>
+                                handleIndividualChange(
+                                  "cierre",
+                                  selectedIndividuals.cierre - 1
+                                )
+                              }
+                              className="size-option"
+                              disabled={
+                                isCierreDisabled ||
+                                selectedIndividuals.cierre <= 0
+                              }
+                            >
+                              -
+                            </button>
+                            <input
+                              type="number"
+                              value={selectedIndividuals.cierre}
+                              onChange={(e) =>
+                                handleIndividualChange(
+                                  "cierre",
+                                  parseInt(e.target.value) || 0
+                                )
+                              }
+                              min="0"
+                              className="quantity-input"
+                              disabled={isCierreDisabled}
+                            />
+                            <button
+                              onClick={() =>
+                                handleIndividualChange(
+                                  "cierre",
+                                  selectedIndividuals.cierre + 1
+                                )
+                              }
+                              className="size-option"
+                              disabled={isCierreDisabled}
+                            >
+                              +
+                            </button>
+                            <span className="price">
+                              U$D {cierreLateral?.price || 0} c/u
+                              {isCierreDisabled && (
+                                <span className="no-stock-msg">
+                                  {" "}
+                                  (Sin stock)
+                                </span>
+                              )}
+                            </span>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 )}

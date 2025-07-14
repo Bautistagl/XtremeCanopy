@@ -2,7 +2,7 @@
 
 import type React from "react"
 import Swal from "sweetalert2";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/Cart/CartContext";
@@ -12,21 +12,43 @@ import Footer from "@/components/Footer/Footer";
 import CartButton from "@/components/Cart/CartButton";
 import "../Hex40/Detalle.css";
 import Header from "@/components/Header/Header";
-
-// Importar datos desde archivos separados
-import { imagesByCategory } from "@/data/gazeboImages";
+import {
+  availableSizesByCategory,
+  imagesByCategory,
+} from "@/data/gazeboImages";
 import { sizes50 } from "@/data/gazeboSizes";
 import { colors } from "@/data/gazeboColors";
 import { getPriceBySize50 } from "@/utils/pricing50";
-
-// Importar el componente de laterales
 import LateralesSelector from "@/components/Laterales/Laterales";
+import { supabase } from "@/supabase/supabase";
 
+interface StockProducto {
+  id: string;
+  producto_id: string;
+  tipo_item:
+    | "producto_base"
+    | "lateral liso"
+    | "lateral con ventana"
+    | "lateral con cierre"
+    | "combo";
+  hay_stock: boolean;
+}
+
+interface CategoriaProducto {
+  id: string;
+  nombre_categoria: "HEX40" | "HEX50";
+  nombre_producto: "3x4.5" | "3x3" | "3x6" | "hexagonal";
+}
+interface StockProductoConNombre extends StockProducto {
+  nombre_producto?: string;
+}
 const Hex50Screen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("HEX 50");
   const [selectedSize, setSelectedSize] = useState<string>("3x3");
   const [selectedColor, setSelectedColor] = useState<string>("black");
-
+  const [stockStatusMap, setStockStatusMap] = useState<Map<string, boolean>>(
+    new Map()
+  );
   const [mainImage, setMainImage] = useState<string>("");
   const [thumbnailImages, setThumbnailImages] = useState<
     { src: string; alt: string }[]
@@ -35,15 +57,113 @@ const Hex50Screen: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("caracteristicas");
-
+  const validSizes = availableSizesByCategory[selectedCategory] || [];
   const { addItem } = useCart();
   const [currentPrice, setCurrentPrice] = useState<number>(
     getPriceBySize50("3x3")
   );
-
   const [additionalPrice, setAdditionalPrice] = useState<number>(0);
   const [selectedSides, setSelectedSides] = useState<string>("");
 
+  const [stockProductos, setStockProductos] = useState<StockProducto[]>([]);
+  const [categoriasProductos, setCategoriasProductos] = useState<
+    CategoriaProducto[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const getStockProductosBaseHex40 =
+    useCallback((): StockProductoConNombre[] => {
+      const categoriasMap = new Map<string, CategoriaProducto>();
+      categoriasProductos.forEach((cat) => {
+        categoriasMap.set(cat.id, cat);
+      });
+
+      const stockFiltradoConNombre: StockProductoConNombre[] = stockProductos
+        .filter((stockItem) => {
+          const categoriaRelacionada = categoriasMap.get(stockItem.producto_id);
+          return (
+            stockItem.tipo_item === "producto_base" &&
+            categoriaRelacionada &&
+            categoriaRelacionada.nombre_categoria === "HEX50"
+          );
+        })
+        .map((stockItem) => {
+          const categoriaRelacionada = categoriasMap.get(
+            stockItem.producto_id
+          )!;
+          return {
+            ...stockItem,
+            nombre_producto: categoriaRelacionada.nombre_producto,
+          };
+        });
+
+      return stockFiltradoConNombre;
+    }, [stockProductos, categoriasProductos]);
+  useEffect(() => {
+    if (!loading && !error && selectedCategory === "HEX 50") {
+      const stockData = getStockProductosBaseHex40();
+      const newStockStatusMap = new Map<string, boolean>();
+
+      // Filtra y mapea los datos de stock relevantes para la categoría actual
+      stockData.forEach((item) => {
+        // Asegúrate de que el nombre_producto exista y que corresponda a un tamaño en validSizes
+        if (item.nombre_producto && validSizes.includes(item.nombre_producto)) {
+          newStockStatusMap.set(item.nombre_producto, item.hay_stock);
+        }
+      });
+      setStockStatusMap(newStockStatusMap);
+
+      // Opcional: Si el tamaño seleccionado actualmente no tiene stock, resetéalo o selecciona uno con stock
+      if (selectedSize && !newStockStatusMap.get(selectedSize)) {
+        const firstAvailableSize = validSizes.find((size) =>
+          newStockStatusMap.get(size)
+        );
+        setSelectedSize(firstAvailableSize || ""); // Selecciona el primero disponible o null
+      }
+    } else if (selectedCategory !== "HEX 50") {
+      setStockStatusMap(new Map());
+    }
+  }, [
+    loading,
+    error,
+    getStockProductosBaseHex40,
+    selectedCategory,
+    validSizes,
+  ]);
+
+  useEffect(() => {
+    const fetchSupabaseData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const { data: stockData, error: stockError } = await supabase
+          .from("stock_productos")
+          .select("*");
+
+        if (stockError) {
+          throw stockError;
+        }
+        setStockProductos(stockData as StockProducto[]);
+
+        const { data: categoriasData, error: categoriasError } = await supabase
+          .from("categorias_productos")
+          .select("*");
+
+        if (categoriasError) {
+          throw categoriasError;
+        }
+        setCategoriasProductos(categoriasData as CategoriaProducto[]);
+      } catch (err: any) {
+        setError(err.message);
+        console.error("Error fetching data from Supabase:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSupabaseData();
+  }, []);
   useEffect(() => {
     setCurrentPrice(getPriceBySize50(selectedSize) + additionalPrice);
   }, [selectedSize, additionalPrice]);
@@ -225,17 +345,26 @@ const Hex50Screen: React.FC = () => {
             <div className="size-selector">
               <h3>Tamaños disponibles:</h3>
               <div className="size-options">
-                {sizes50.map((size) => (
-                  <button
-                    key={size.size}
-                    className={`size-option ${
-                      selectedSize === size.size ? "active" : ""
-                    }`}
-                    onClick={() => handleSizeChange(size.size)}
-                  >
-                    {size.size}
-                  </button>
-                ))}
+                {validSizes.map((size) => {
+                  const isDisabled =
+                    selectedCategory === "HEX 50" &&
+                    !(stockStatusMap.get(size) ?? false);
+
+                  return (
+                    <button
+                      key={size}
+                      className={`size-option ${
+                        selectedSize === size ? "active" : ""
+                      } ${
+                        isDisabled ? "disabled" : "" // Agregamos la clase disabled si está deshabilitado
+                      }`}
+                      onClick={() => handleSizeChange(size)}
+                      disabled={isDisabled} // Deshabilitamos el botón directamente
+                    >
+                      {size}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -273,12 +402,12 @@ const Hex50Screen: React.FC = () => {
             </div>
             {/* Agregar el componente de selección de laterales */}
             <div className="laterales-section">
-                <LateralesSelector
-    selectedSize={selectedSize}
-    resetTrigger={selectedSize} 
-    addToPrice={handleAddToPrice}
-    addSidesToCart={handleAddSidesToCart}
-  />
+              <LateralesSelector
+                selectedSize={selectedSize}
+                resetTrigger={selectedSize}
+                addToPrice={handleAddToPrice}
+                addSidesToCart={handleAddSidesToCart}
+              />
             </div>
           </div>
 
@@ -493,7 +622,7 @@ const Hex50Screen: React.FC = () => {
       <QuotationPopup
         isOpen={isPopupOpen}
         onClose={handleClosePopup}
-        productName={"Gazebo Aluminio HEX 40"}
+        productName={"Gazebo Aluminio HEX 50"}
         selectedSize={selectedSize}
         selectedColor={selectedColor}
         selectedSides={selectedSides} // Agregamos los laterales a la cotización

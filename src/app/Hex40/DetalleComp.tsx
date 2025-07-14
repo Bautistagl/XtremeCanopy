@@ -2,14 +2,14 @@
 
 import type React from "react"
 import Swal from "sweetalert2";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/Cart/CartContext";
 import { formatProductForCart } from "@/components/Cart/addToCartHelper";
 import QuotationPopup from "@/components/ContactPopUp/ContactPopUp";
 import Footer from "@/components/Footer/Footer";
-import CartButton from "@/components/Cart/CartButton";
+
 import "./Detalle.css";
 import Header from "@/components/Header/Header";
 
@@ -23,15 +23,36 @@ import {
 import { sizes } from "@/data/gazeboSizes";
 import { colors } from "@/data/gazeboColors";
 import { getPriceBySize } from "@/utils/pricing40";
-
-// Importar el componente de laterales
 import LateralesSelector from "@/components/Laterales/Laterales";
+import { supabase } from "@/supabase/supabase";
 
+interface StockProducto {
+  id: string;
+  producto_id: string;
+  tipo_item:
+    | "producto_base"
+    | "lateral liso"
+    | "lateral con ventana"
+    | "lateral con cierre"
+    | "combo";
+  hay_stock: boolean;
+}
+
+interface CategoriaProducto {
+  id: string;
+  nombre_categoria: "HEX40" | "HEX50";
+  nombre_producto: "3x4.5" | "3x3" | "3x6" | "hexagonal";
+}
+interface StockProductoConNombre extends StockProducto {
+  nombre_producto?: string;
+}
 const ProductDetail: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("HEX 40");
   const [selectedSize, setSelectedSize] = useState<string>("3x3");
   const [selectedColor, setSelectedColor] = useState<string>("black");
-
+  const [stockStatusMap, setStockStatusMap] = useState<Map<string, boolean>>(
+    new Map()
+  );
   const [mainImage, setMainImage] = useState<string>("");
   const [thumbnailImages, setThumbnailImages] = useState<
     { src: string; alt: string }[]
@@ -48,7 +69,42 @@ const ProductDetail: React.FC = () => {
 
   const [additionalPrice, setAdditionalPrice] = useState<number>(0);
   const [selectedSides, setSelectedSides] = useState<string>("");
+  const validSizes = availableSizesByCategory[selectedCategory] || [];
+  const [stockProductos, setStockProductos] = useState<StockProducto[]>([]);
+  const [categoriasProductos, setCategoriasProductos] = useState<
+    CategoriaProducto[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
+  const getStockProductosBaseHex40 =
+    useCallback((): StockProductoConNombre[] => {
+      const categoriasMap = new Map<string, CategoriaProducto>();
+      categoriasProductos.forEach((cat) => {
+        categoriasMap.set(cat.id, cat);
+      });
+
+      const stockFiltradoConNombre: StockProductoConNombre[] = stockProductos
+        .filter((stockItem) => {
+          const categoriaRelacionada = categoriasMap.get(stockItem.producto_id);
+          return (
+            stockItem.tipo_item === "producto_base" &&
+            categoriaRelacionada &&
+            categoriaRelacionada.nombre_categoria === "HEX40"
+          );
+        })
+        .map((stockItem) => {
+          const categoriaRelacionada = categoriasMap.get(
+            stockItem.producto_id
+          )!;
+          return {
+            ...stockItem,
+            nombre_producto: categoriaRelacionada.nombre_producto,
+          };
+        });
+
+      return stockFiltradoConNombre;
+    }, [stockProductos, categoriasProductos]);
   useEffect(() => {
     setCurrentPrice(getPriceBySize(selectedSize) + additionalPrice);
   }, [selectedSize, additionalPrice]);
@@ -71,33 +127,93 @@ const ProductDetail: React.FC = () => {
     updateImages();
   }, [selectedCategory, selectedSize, selectedColor]);
 
-  const handleSizeChange = (size: string) => {
-    setSelectedSize(size);
+  useEffect(() => {
+    if (!loading && !error && selectedCategory === "HEX 40") {
+      const stockData = getStockProductosBaseHex40();
+      const newStockStatusMap = new Map<string, boolean>();
 
-    const validColors =
-      availableColorsByCategorySize[selectedCategory]?.[size] || [];
-    if (!validColors.includes(selectedColor)) {
-      setSelectedColor(validColors[0] || "");
+      // Filtra y mapea los datos de stock relevantes para la categoría actual
+      stockData.forEach((item) => {
+        // Asegúrate de que el nombre_producto exista y que corresponda a un tamaño en validSizes
+        if (item.nombre_producto && validSizes.includes(item.nombre_producto)) {
+          newStockStatusMap.set(item.nombre_producto, item.hay_stock);
+        }
+      });
+      setStockStatusMap(newStockStatusMap);
+
+      // Opcional: Si el tamaño seleccionado actualmente no tiene stock, resetéalo o selecciona uno con stock
+      if (selectedSize && !newStockStatusMap.get(selectedSize)) {
+        const firstAvailableSize = validSizes.find((size) =>
+          newStockStatusMap.get(size)
+        );
+        setSelectedSize(firstAvailableSize || ""); // Selecciona el primero disponible o null
+      }
+    } else if (selectedCategory !== "HEX 40") {
+      setStockStatusMap(new Map());
     }
+  }, [
+    loading,
+    error,
+    getStockProductosBaseHex40,
+    selectedCategory,
+    validSizes,
+  ]);
 
-    setAdditionalPrice(0);
-    setSelectedSides("");
+  useEffect(() => {
+    const fetchSupabaseData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const { data: stockData, error: stockError } = await supabase
+          .from("stock_productos")
+          .select("*");
+
+        if (stockError) {
+          throw stockError;
+        }
+        setStockProductos(stockData as StockProducto[]);
+
+        const { data: categoriasData, error: categoriasError } = await supabase
+          .from("categorias_productos")
+          .select("*");
+
+        if (categoriasError) {
+          throw categoriasError;
+        }
+        setCategoriasProductos(categoriasData as CategoriaProducto[]);
+      } catch (err: any) {
+        setError(err.message);
+        console.error("Error fetching data from Supabase:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSupabaseData();
+  }, []);
+
+  const handleSizeChange = (size: string) => {
+    const hasStock = stockStatusMap.get(size) ?? false;
+    if (selectedCategory !== "HEX 40" || hasStock) {
+      setSelectedSize(size);
+
+      const validColors =
+        availableColorsByCategorySize[selectedCategory]?.[size] || [];
+      if (!validColors.includes(selectedColor)) {
+        setSelectedColor(validColors[0] || "");
+      }
+
+      setAdditionalPrice(0);
+      setSelectedSides("");
+    } else {
+      console.log(
+        `El tamaño ${size} no tiene stock disponible para la categoría ${selectedCategory}.`
+      );
+    }
   };
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
-  };
-
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-
-    const validSizes = availableSizesByCategory[category];
-    if (!validSizes.includes(selectedSize)) {
-      setSelectedSize(validSizes[0]);
-    }
-
-    setAdditionalPrice(0);
-    setSelectedSides("");
   };
 
   const handleThumbnailClick = (image: string) => {
@@ -196,7 +312,20 @@ const ProductDetail: React.FC = () => {
 
     return thumbnails;
   };
-  const validSizes = availableSizesByCategory[selectedCategory] || [];
+
+  if (error) {
+    return (
+      <div className="product-container">
+        <Header />
+        <main className="product-detail">
+          <p>Error al cargar la información: {error}</p>
+          <p>Por favor, intente de nuevo más tarde.</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="product-container">
       <Header />
@@ -250,17 +379,26 @@ const ProductDetail: React.FC = () => {
             <div className="size-selector">
               <h3>Tamaños disponibles:</h3>
               <div className="size-options">
-                {validSizes.map((size) => (
-                  <button
-                    key={size}
-                    className={`size-option ${
-                      selectedSize === size ? "active" : ""
-                    }`}
-                    onClick={() => handleSizeChange(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
+                {validSizes.map((size) => {
+                  const isDisabled =
+                    selectedCategory === "HEX 40" &&
+                    !(stockStatusMap.get(size) ?? false);
+
+                  return (
+                    <button
+                      key={size}
+                      className={`size-option ${
+                        selectedSize === size ? "active" : ""
+                      } ${
+                        isDisabled ? "disabled" : "" // Agregamos la clase disabled si está deshabilitado
+                      }`}
+                      onClick={() => handleSizeChange(size)}
+                      disabled={isDisabled} // Deshabilitamos el botón directamente
+                    >
+                      {size}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

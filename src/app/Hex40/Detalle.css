@@ -304,6 +304,7 @@ img {
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
   font-weight: 500;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s;
   border: none;
@@ -369,6 +370,7 @@ img {
   font-weight: 500;
   color: #666;
   transition: all 0.3s;
+  font-size: 1rem;
 }
 
 .tab-button.active {
