@@ -50,71 +50,76 @@ export default function StockDashboard() {
 
   // Function to fetch data from Supabase
   const fetchProducts = useCallback(async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     try {
       // Fetch categorias_productos
-      const { data: categorias, error: categoriasError } = await supabase
-        .from<CategoriaProducto>("categorias_productos")
-        .select("*")
-      if (categoriasError) throw categoriasError
+      const { data: categorias, error: categoriasError } = (await supabase
+        .from("categorias_productos")
+        .select("*")) as { data: CategoriaProducto[]; error: any };
+      if (categoriasError) throw categoriasError;
 
       // Fetch stock_productos
-      const { data: stockItems, error: stockError } = await supabase
-        .from<StockItem>("stock_productos")
-        .select("*")
-      if (stockError) throw stockError
+      const { data: stockItems, error: stockError } = (await supabase
+        .from("stock_productos")
+        .select("*")) as { data: StockItem[]; error: any };
+      if (stockError) throw stockError;
 
       // Process and combine data for display
       const combinedProducts: ProductDisplay[] = categorias.map((catProd) => {
-        const productStock: ProductDisplay['stockStatus'] = {
+        const productStock: ProductDisplay["stockStatus"] = {
           producto_base: false,
-          'lateral liso': false,
-          'lateral con ventana': false,
-          'lateral con cierre': false,
+          "lateral liso": false,
+          "lateral con ventana": false,
+          "lateral con cierre": false,
           combo: false,
-        }
+        };
 
         stockItems.forEach((stockItem) => {
           if (stockItem.producto_id === catProd.id) {
             // Type assertion to ensure tipo_item is a valid key
-            productStock[stockItem.tipo_item as keyof ProductDisplay['stockStatus']] = stockItem.hay_stock
+            productStock[
+              stockItem.tipo_item as keyof ProductDisplay["stockStatus"]
+            ] = stockItem.hay_stock;
           }
-        })
+        });
 
         return {
           id: catProd.id,
           category: catProd.nombre_categoria,
           name: catProd.nombre_producto,
           stockStatus: productStock,
-        }
-      })
+        };
+      });
 
-      setProducts(combinedProducts)
+      setProducts(combinedProducts);
     } catch (err: any) {
-      console.error("Error fetching products:", err.message)
-      setError("Failed to load product data. Please try again.")
+      console.error("Error fetching products:", err.message);
+      setError("Failed to load product data. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchProducts()
-  }, [fetchProducts])
+    fetchProducts();
+  }, [fetchProducts]);
 
   // Function to toggle stock status for a specific item (producto_base or lateral)
-  const toggleStock = async (originalProductId: string, itemType: keyof ProductDisplay['stockStatus']) => {
+  const toggleStock = async (
+    originalProductId: string,
+    itemType: keyof ProductDisplay["stockStatus"]
+  ) => {
     // Find the current stock status for the specific item
-    const currentProduct = products.find(p => p.id === originalProductId);
+    const currentProduct = products.find((p) => p.id === originalProductId);
     if (!currentProduct) return;
 
     const currentHayStock = currentProduct.stockStatus[itemType];
     const newHayStock = !currentHayStock;
 
     // Optimistic update
-    setProducts(prevProducts =>
-      prevProducts.map(p =>
+    setProducts((prevProducts) =>
+      prevProducts.map((p) =>
         p.id === originalProductId
           ? {
               ...p,
@@ -131,21 +136,24 @@ export default function StockDashboard() {
     try {
       // Find the specific stock_productos entry by product_id and tipo_item
       const { data, error } = await supabase
-        .from<StockItem>('stock_productos')
+        .from("stock_productos")
         .update({ hay_stock: newHayStock })
-        .eq('producto_id', originalProductId)
-        .eq('tipo_item', itemType);
+        .eq("producto_id", originalProductId)
+        .eq("tipo_item", itemType);
 
       if (error) {
         throw error;
       }
       // If successful, no need to revert, optimistic update already happened
     } catch (err: any) {
-      console.error(`Error updating stock for ${itemType} of product ${originalProductId}:`, err.message);
+      console.error(
+        `Error updating stock for ${itemType} of product ${originalProductId}:`,
+        err.message
+      );
       setError(`Failed to update stock for ${itemType}.`);
       // Revert optimistic update if there was an error
-      setProducts(prevProducts =>
-        prevProducts.map(p =>
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
           p.id === originalProductId
             ? {
                 ...p,
