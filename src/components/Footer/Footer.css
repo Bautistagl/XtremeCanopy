@@ -130,12 +130,10 @@
     align-items: flex-start;
     margin-bottom: 0px;
     font-size: 14px;
-    color: #cccccc;
+    color: black;
   }
   
-  .contact-info a:hover {
-    color: #ffffff;
-  }
+
   
   .footer-bottom {
     background-color: #171717;

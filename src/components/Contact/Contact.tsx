@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Contact.css";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import Image from "next/image";
 
 // Custom Badge component
 const Badge: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -16,13 +17,11 @@ const PhoneIcon: React.FC = () => (
     width="24"
     height="24"
     viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    fill="currentColor" // Often WhatsApp icons are filled with their brand color
+    // If you want a stroke, you can add it back: stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
   >
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    <title>WhatsApp icon</title>
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.748-2.201-.271-.439-.032-.67-.2-.686-.174-.016-.381-.006-.593-.006-.213 0-.525.074-.793.372-.269.298-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 1.984 3.407 4.75 4.536.63.253 1.129.405 1.518.529.567.182 1.083.163 1.482.098.4-.065 1.256-.519 1.439-1.026.18-.506.18-1.296.121-1.48-.058-.184-.213-.298-.44-.397zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 18c-3.313 0-6-2.687-6-6s2.687-6 6-6 6 2.687 6 6-2.687 6-6 6z" />
   </svg>
 );
 
@@ -248,16 +247,20 @@ const Contact: React.FC = () => {
           {/* Left column - Contact information */}
           <div className="contact-info">
             <h3 className="contact-section-title">Información de Contacto</h3>
-
-            <div className="contact-item">
-              <PhoneIcon />
-              <div>
-                <h4 className="contact-item-title">Whatsapp Business</h4>
-                <p className="contact-item-text">
-                  <Link href="tel:+5492374103483">+54 9 2374 10-3483</Link>
-                </p>
+            <Link href="tel:+5492374103483">
+              <div className="contact-item">
+                <Image
+                  alt=""
+                  height={25}
+                  width={25}
+                  src="/images\whatsapp.png"
+                />
+                <div>
+                  <h4 className="contact-item-title">Whatsapp Business</h4>
+                  <p className="contact-item-text">+54 9 2374 10-3483</p>
+                </div>
               </div>
-            </div>
+            </Link>
 
             <div className="contact-item">
               <EmailIcon />
