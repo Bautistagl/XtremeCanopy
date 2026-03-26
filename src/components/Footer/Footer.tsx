@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
             </li>
             <li>
               <Link
-                href="wa.me/message/FG66CJRMFEXMD1"
+                href="https://wa.me/message/FG66CJRMFEXMD1"
                 target="_blank"
                 rel="noopener noreferrer"
               >

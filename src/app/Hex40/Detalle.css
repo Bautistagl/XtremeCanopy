@@ -644,11 +644,24 @@ img {
 }
 
 .product-price h3 {
-
     font-size: 1.7rem;
     margin-bottom: 0.8rem;
-    color: rgb(0, 0, 0)
-  
+    color: rgb(0, 0, 0);
+}
+
+.price-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.price-currency-note {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 4px;
 }
 .cart-price{
   font-weight: 600;

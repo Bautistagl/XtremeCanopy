@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/components/Cart/CartContext";
+import WhatsAppButton from "@/components/WhatsAppButton/WhatsAppButton";
 
 export const metadata: Metadata = {
   title: "Xtreme Canopy - Gazebos Premium",
@@ -43,7 +44,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
-        <CartProvider>{children}</CartProvider>
+        <CartProvider>
+          {children}
+          <WhatsAppButton />
+        </CartProvider>
       </body>
     </html>
   );

@@ -1,16 +1,14 @@
 'use client'
 
+import { Suspense } from "react";
 import ProductDetail from "./DetalleComp";
 
-
 export default function DetallePage() {
-
-  
- 
-  
   return (
-    <div >
-     <ProductDetail/>
+    <div>
+      <Suspense>
+        <ProductDetail />
+      </Suspense>
     </div>
   );
 }

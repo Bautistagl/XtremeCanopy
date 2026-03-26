@@ -394,7 +394,7 @@ const LateralesSelector: React.FC<{
             className={isComboDisabled ? "disabled-option" : ""}
           >
             {" "}
-            {combo.description} : U$D {combo.price}
+            {combo.description} : ${combo.price}
             {isComboDisabled && (
               <span className="no-stock-msg"> (Sin stock)</span>
             )}{" "}
@@ -477,7 +477,7 @@ const LateralesSelector: React.FC<{
                               +
                             </button>
                             <span className="price">
-                              U$D {lisoLateral?.price || 0} c/u
+                              ${lisoLateral?.price || 0} c/u
                               {isLisoDisabled && (
                                 <span className="no-stock-msg">
                                   {" "}
@@ -546,7 +546,7 @@ const LateralesSelector: React.FC<{
                               +
                             </button>
                             <span className="price">
-                              U$D {ventanaLateral?.price || 0} c/u
+                              ${ventanaLateral?.price || 0} c/u
                               {isVentanaDisabled && (
                                 <span className="no-stock-msg">
                                   {" "}
@@ -615,7 +615,7 @@ const LateralesSelector: React.FC<{
                               +
                             </button>
                             <span className="price">
-                              U$D {cierreLateral?.price || 0} c/u
+                              ${cierreLateral?.price || 0} c/u
                               {isCierreDisabled && (
                                 <span className="no-stock-msg">
                                   {" "}
@@ -631,7 +631,7 @@ const LateralesSelector: React.FC<{
                 )}
 
                 <div className="total-price">
-                  <p>Total laterales: U$D {calculateIndividualTotal()}</p>
+                  <p>Total laterales: ${calculateIndividualTotal()}</p>
                 </div>
               </div>
             )}

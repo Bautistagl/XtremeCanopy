@@ -130,7 +130,11 @@
     align-items: flex-start;
     margin-bottom: 0px;
     font-size: 14px;
-    color: black;
+    color: #cccccc;
+  }
+
+  .contact-info a:hover {
+    color: #ffffff;
   }
   
 

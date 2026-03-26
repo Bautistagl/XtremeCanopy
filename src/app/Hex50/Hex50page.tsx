@@ -3,6 +3,7 @@
 import type React from "react"
 import Swal from "sweetalert2";
 import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/Cart/CartContext";
@@ -43,8 +44,11 @@ interface StockProductoConNombre extends StockProducto {
   nombre_producto?: string;
 }
 const Hex50Screen: React.FC = () => {
+  const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string>("HEX 50");
-  const [selectedSize, setSelectedSize] = useState<string>("3x3");
+  const [selectedSize, setSelectedSize] = useState<string>(
+    searchParams.get("size") ?? "3x3"
+  );
   const [selectedColor, setSelectedColor] = useState<string>("black");
   const [stockStatusMap, setStockStatusMap] = useState<Map<string, boolean>>(
     new Map()
@@ -392,13 +396,15 @@ const Hex50Screen: React.FC = () => {
               </div>
             </div>
             <div className="product-price">
-              <h3>Precio: U$D{currentPrice.toLocaleString()}</h3>
+              <h3>Precio: ${currentPrice.toLocaleString()}</h3>
               {additionalPrice > 0 && (
-                <p className="price-breakdown">
-                  Base: U$D{getPriceBySize50(selectedSize).toLocaleString()} +
-                  Laterales: U$D{additionalPrice.toLocaleString()}
-                </p>
+                <div className="price-breakdown">
+                  <p>Base: ${getPriceBySize50(selectedSize).toLocaleString()}</p>
+                  <p>Laterales: ${additionalPrice.toLocaleString()}</p>
+                  <p><strong>Total: ${currentPrice.toLocaleString()}</strong></p>
+                </div>
               )}
+              <p className="price-currency-note">* Precio expresado en dólares (USD)</p>
             </div>
             {/* Agregar el componente de selección de laterales */}
             <div className="laterales-section">

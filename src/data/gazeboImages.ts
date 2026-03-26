@@ -75,22 +75,22 @@ function generateCategoryImages(category: "HEX 40" | "HEX 50"): CategoryImages {
                 : "/images/placeh.svg",
             thumbnails: [
               {
-                src: `/images/info/${category}/1.png`,
-                alt: `Información estructura ${category}`,
+                src: `/images/info/HEX 50/1.png`,
+                alt: `Información estructura HEX 50`,
               },
               {
-                src: `/images/info/${category}/2.png`,
-                alt: `Información estructura ${category}`,
+                src: `/images/info/HEX 50/2.png`,
+                alt: `Información estructura HEX 50`,
               },
               {
-                src: `/images/info/${category}/3.png`,
-                alt: `Información estructura ${category}`,
+                src: `/images/info/HEX 50/3.png`,
+                alt: `Información estructura HEX 50`,
               },
               {
-                src: `/images/info/${category}/4.png`,
-                alt: `Información estructura ${category}`,
+                src: `/images/info/HEX 50/4.png`,
+                alt: `Información estructura HEX 50`,
               },
-            ], // sin thumbnails
+            ],
           }
         : {
             main: `/images/colores/${size}/${normalizedColor}/main.png`,

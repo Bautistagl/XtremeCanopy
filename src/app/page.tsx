@@ -284,6 +284,87 @@ export default function Home() {
             catalogLink="/catalogo"
             contactLink="/contacto"
           />
+          <section className="size-banners-section">
+            <div className="size-banners-group">
+              <div className="size-banners-group-header">
+                <span className="size-banners-series-tag">Lite Series</span>
+                <h2 className="size-banners-group-title">Gazebo HEX 40</h2>
+              </div>
+              <div className="size-banners-grid">
+                {[
+                  {
+                    size: "3x3",
+                    param: "3x3",
+                    img: "/images/colores/3x3/black/main.png",
+                  },
+                  {
+                    size: "3x4.5",
+                    param: "3x4.5",
+                    img: "/images/colores/3x4.5/black/main.png",
+                  },
+                  {
+                    size: "3x6",
+                    param: "3x6",
+                    img: "/images/colores/3x6/black/main.png",
+                  },
+                  {
+                    size: "6 Lados",
+                    param: "Hexagonal",
+                    img: "/images/colores/Hexagonal/black/main.png",
+                  },
+                ].map(({ size, param, img }) => (
+                  <Link
+                    key={size}
+                    href={`/Hex40?size=${param}`}
+                    className="size-banner"
+                  >
+                    <Image
+                      src={img}
+                      alt={`Gazebo HEX 40 ${size}`}
+                      fill
+                      className="size-banner-img"
+                    />
+                    <div className="size-banner-overlay" />
+                    <span className="size-banner-label">{size}</span>
+                    <span className="size-banner-cta">Ver modelo →</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="size-banners-group">
+              <div className="size-banners-group-header">
+                <span className="size-banners-series-tag pro">Pro Series</span>
+                <h2 className="size-banners-group-title">Gazebo HEX 50</h2>
+              </div>
+              <div className="size-banners-grid three-col">
+                {[
+                  { size: "3x3", img: "/images/colores/3x3/black/main.png" },
+                  {
+                    size: "3x4.5",
+                    img: "/images/colores/3x4.5/black/main.png",
+                  },
+                  { size: "3x6", img: "/images/colores/3x6/black/main.png" },
+                ].map(({ size, img }) => (
+                  <Link
+                    key={size}
+                    href={`/Hex50?size=${size}`}
+                    className="size-banner"
+                  >
+                    <Image
+                      src={img}
+                      alt={`Gazebo HEX 50 ${size}`}
+                      fill
+                      className="size-banner-img"
+                    />
+                    <div className="size-banner-overlay" />
+                    <span className="size-banner-label">{size}</span>
+                    <span className="size-banner-cta">Ver modelo →</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
           <HeroSection
             title="Gazebos Portátiles Premium"
             subtitle="Soluciones versátiles para exteriores que combinan funcionalidad y estilo."
@@ -293,8 +374,8 @@ export default function Home() {
         </div>
 
         <Feature />
-        <ProductsGrid title="Nuestros Productos" products={mockProducts} />
-        <AboutUs />
+        {/* <ProductsGrid title="Nuestros Productos" products={mockProducts} /> */}
+        {/* <AboutUs /> */}
         <GalleryComponent
           items={galleryItems}
           subtitle="Muestra de algunos trabajos realizados"

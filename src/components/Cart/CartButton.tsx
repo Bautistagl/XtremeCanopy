@@ -151,7 +151,7 @@ const CartButton: React.FC = () => {
                                 {item.color}
                               </>
                             )}
-                            <span className="cart-price"> U$D{item.price}</span>
+                            <span className="cart-price"> ${item.price}</span>
                           </div>
                         )}
                       </div>
